@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Event Portal - Quản lý sự kiện</title>
+  <link rel="stylesheet" href="style/qlsk.css" />
+</head>
+<body>
+  <div class="sidebar">
+    <h2>EVENT PORTAL</h2>
+
+    <ul class="menu">
+      <li><a href="tke.html">Thống kê</a></li>
+      <li><a href="tochuc.html">Tổ chức</a></li>
+      <li class="active"><a href="qlsk.html">Quản lý sự kiện</a></li>
+      <li><a href="qlnd.html">Quản lý nội dung (UGC)</a></li>
+      <li><a href="mxh.html">Mạng xã hội</a></li>
+      <li><a href="seo.html">Cài đặt SEO</a></li>
+    </ul>
+
+    <div class="logout">
+      <div class="user-info">ABC<br><small>Admin</small></div><br>
+      <button class="logout-btn">Đăng xuất</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="header-container">
+      <div class="title-section">
+        <h1>Quản lý sự kiện</h1>
+        <div class="sub">Tạo và quản lý các sự kiện</div>
+      </div>
+      <button class="add-org-btn" id="openModalBtn">+ Thêm mới</button>
+    </div>
+
+    <!-- Tìm kiếm -->
+    <div class="search-box">
+      <img src="picture/search.jpg" class="search-icon" alt="Search">
+      <input type="text" id="searchInput" placeholder="Tìm kiếm sự kiện" />
+    </div>
+
+    <div class="content-tabs">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="created">Đã tạo <span class="badge">(2)</span></button>
+        <button class="tab-btn" data-tab="waitapproved">Chờ duyệt <span class="badge">(3)</span></button>
+        <button class="tab-btn" data-tab="approved">Đã duyệt <span class="badge">(2)</span></button>
+      </div>
+    </div>
+
+    <div class="tab-contents">
+      <!-- Tab Đã tạo -->
+      <div class="tab-content active" id="created-content">
+        <div class="event-card">
+          <!-- Card 1 -->
+          <div class="content-card">
+            <div class="content-image">
+              <img src="https://scontent.fdad3-5.fna.fbcdn.net/v/t39.30808-6/583929422_1258691176299243_4441746172977226675_n.png?stp=dst-png_p180x540&_nc_cat=109&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=qogkCVfa1hoQ7kNvwGLvdcw&_nc_oc=AdkAhbIxSh20ESpoTAG0WLyMs_Ae6hlXajTHmkeMFz7egmeojtP7mf_qC08KbU2hCvU&_nc_zt=23&_nc_ht=scontent.fdad3-5.fna&_nc_gid=mytsXHgtETg9tt9eRWH5ww&oh=00_AfhPL00Og3bQIlhlB_rwO57Ql9JZG3T2Rz771JBFuZ25cQ&oe=692BBCAF" alt="Khoảnh khắc đẹp tại sự kiện">
+            </div>
+            <div class="content-info">
+              <div class="date">
+                <p>Rebel Heart - Gala sinh nhật lần thứ X</p>
+                <div class="status-badge approved">Còn hạn</div>
+              </div>
+              <div class="event-info">
+                <p>LCĐ Công nghệ Đa phương tiện  xin trân trọng thông báo: 🎉Hành trình 10 năm đầy cảm hứng của "nhà Cam" sắp được khép lại bằng một dấu son rực rỡ với sự kiện "Rebel Heart - Gala sinh nhật lần thứ X."💗🧡</p>
+                <p>⏰ Thời gian: 7:30 22/11/2025 - 15:00 22/11/2025</p>
+                <p>📅 Hạn đăng ký: 7:30 22/11/2025</p>
+                <p>📍 Địa điểm: Hội Trường D, Học viện Công nghệ Bưu chính Viễn thông – Cơ sở TP.HCM</p>
+                <p>🏢 Tổ chức: LCDCNDPT</p>
+              </div>    
+              <div class="mxh">
+                <div class="mxh-web">Web</div>
+              </div>
+              <a class="dki" href="https://forms.gle/oTizWNfXd12hxEss8">Link đăng ký →</a>
+              <div class="button-container">
+                <button class="approve-btn edit-event-btn" data-event-id="created-001">Sửa</button>
+                <button class="delete-btn">Xóa</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="content-card">
+            <div class="content-image">
+              <img src="https://scontent.fdad3-5.fna.fbcdn.net/v/t39.30808-6/558917014_1235594361929975_9218649662574090432_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=NqGHXKXV3coQ7kNvwE5O6B7&_nc_oc=AdmGasvEw9PZWTdccFjZTlVP16aSZtfi68wT6lnzmI3vISRogHhLFzWY3h03A6E5oGk&_nc_zt=23&_nc_ht=scontent.fdad3-5.fna&_nc_gid=C9vrFviyezSkmjJ_wlGztA&oh=00_AfiPKBa_ZviZU_6wijrgCGhovaDSo17ZI61wRCwjB2Bpnw&oe=692BB5DB" alt="Khoảnh khắc đẹp tại sự kiện">
+            </div>
+            <div class="content-info">
+              <div class="date">
+                <p>Chào Tân Sinh Viên 2025</p>
+                <div class="status-badge disapproved">Hết hạn</div>
+              </div>
+              <div class="event-info">
+                <p>Khơi nguồn tự hào – PROUD AWAKENING!<br>Tự hào không chỉ là cảm xúc, mà là năng lượng để bứt phá, để "cháy" hết mình trong từng khoảnh khắc sinh viên!<br>Đã đến lúc đánh thức phiên bản tự hào nhất của bạn, cùng C!SV - PTIT tạo nên một mùa bùng nổ chưa từng có!<br>Sẵn sàng "bật mode tự hào", bước vào hành trình tuổi trẻ đỉnh nhất cùng CHÀO! SINH VIÊN 2025 chưa nào ?</p>
+                <p>⏰ Thời gian: 7:30 22/11/2026 - 15:00 22/11/2026</p>
+                <p>📅 Hạn đăng ký: 22:30 21/11/2026</p>
+                <p>📍 Địa điểm: Học viện Công nghệ Bưu chính Viễn thông – Cơ sở TP. Hồ Chí Minh</p>
+                <p>🏢 Tổ chức: Azone</p>
+              </div>    
+              <div class="mxh">
+                <div class="mxh-web">Web</div>
+              </div>
+              <a class="dki" href="https://forms.gle/19hUqEApKArhBS1Y9">Link đăng ký →</a>
+              <div class="button-container">
+                <button class="approve-btn edit-event-btn" data-event-id="created-002">Sửa</button>
+                <button class="delete-btn">Xóa</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Chờ duyệt -->
+      <div class="tab-content" id="waitapproved-content">
+        <div class="event-card">
+          
+            <!-- Card 1 -->
+          <div class="content-card">
+            <div class="content-image">
+              <img src="https://scontent.fdad3-5.fna.fbcdn.net/v/t39.30808-6/565116867_122109067953007168_7188552843937308533_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=833d8c&_nc_ohc=JL9RBlLqDvAQ7kNvwGklou9&_nc_oc=AdkriqcE4ePcY2wCKt07sj04WOe59TgR7EGNFTE0-LXTL9JX4q_LKyc08Km2UZ9OUUA&_nc_zt=23&_nc_ht=scontent.fdad3-5.fna&_nc_gid=k7CwjZe_0zGuot42qDYWaw&oh=00_AfjsgzqyiFVkjs3lODAmMOyE47qP1hl3NP0pnEAJf9byaA&oe=692BB1F6" alt="Khoảnh khắc đẹp tại sự kiện">
+            </div>
+            <div class="content-info">
+              <div class="date">
+                <p>ASTEES COLLECTION REVEAL</p>
+                <div class="status-badge approved">Còn hạn</div>
+              </div>
+              <div class="event-info">
+                <p>Loa loa loa…Không để các bạn phải chờ lâu thêm nữa, sự kiện thời trang ASTEEs Colletion Reval đã chính thức mở form đăng ký rồi đây.  
+Đây không chỉ là một fashion show — mà là một đêm bùng nổ của thời trang, âm nhạc, văn hoá anime & năng lượng đường phố được A'zone cook theo cách chưa từng. Chúng mình mang sức mạnh và tinh thần từ thế giới anime, streetwear vào từng thiết kế, để mỗi item là một sự cá tính, lan tỏa năng lượng và đúng với phong cách bạn lựa chọn.</p>
+                <p>⏰ Thời gian: 10:00 23/11/2026 - 15:00 23/11/2026 </p>
+                <p>📅 Hạn đăng ký: 23:00 23/10/2026</p>
+                <p>📍 Địa điểm: Hội trường D-Học viện Công nghệ Bưu chính Viễn thông Cơ sở TPHCM</p>
+                <p>🏢 Tổ chức: A'zone</p>
+              </div>    
+              <div class="mxh">
+                <div class="mxh-web">Web</div>
+              </div>
+              <a class="dki" href="https://forms.gle/DdqnFSqYmFawhLqg6">Link đăng ký →</a>
+              <div class="button-container">
+                <button class="see-btn" data-event-id="waitapproved-001">Xem</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="content-card">
+            <div class="content-image">
+              <img src="https://scontent.fdad3-1.fna.fbcdn.net/v/t39.30808-6/547828632_1216108510557641_566180599963180957_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=103&ccb=1-7&_nc_sid=127cfc&_nc_ohc=cSFJ-oW5RcwQ7kNvwE4HsMC&_nc_oc=Adk1Wv_P4ZyQCCI6j3sjxHeejBZVNrIN1TJv6P-6ibA_nHrjv3GG0BlNACpK5IuANMU&_nc_zt=23&_nc_ht=scontent.fdad3-1.fna&_nc_gid=pGc--EBLpGSOxQLnZ7zwNQ&oh=00_AfhpOBVjAnzNYllKAgzHkQ2a8b26_OapTEw_rUFfMVvRKg&oe=692BCA85" alt="Khoảnh khắc đẹp tại sự kiện">
+            </div>
+            <div class="content-info">
+              <div class="date">
+                <p>FABULOUS-ITMC MỞ ĐƠN TUYỂN THÀNH VIÊN MỚI</p>
+                <div class="status-badge disapproved">Hết hạn</div>
+              </div>
+              <div class="event-info">
+                <p>Một cánh cửa mới đã mở ra, chào đón những người bạn đồng hành đầy nhiệt huyết bước vào hành trình cùng ITMC. 🦊✨
+💌 Nếu bạn yêu thích công nghệ – truyền thông, muốn thử sức trong một môi trường sáng tạo, trẻ trung và giàu năng lượng thì ITMC chính là nơi dành cho bạn.
+Tại đây, bạn sẽ được học hỏi, trải nghiệm, kết nối cùng những người bạn đồng chí hướng và cùng nhau viết tiếp câu chuyện rực rỡ của ITMC.</p>
+                <p>⏰ Thời gian: 7:00 25/11/2025 - 15:00 25/11/2025</p>
+                <p>📅 Hạn đăng ký: 20:00 24/11/2025</p>
+                <p>📍 Địa điểm: Học viện Công nghệ Bưu chính Viễn thông – Cơ sở TP.HCM</p>
+                <p>🏢 Tổ chức: ITMC</p>
+              </div>    
+              <div class="mxh">
+                <div class="mxh-web">Web</div>
+              </div>
+              <a class="dki" href="https://forms.gle/6fCD8ZMh6oDHYtsu6">Link đăng ký →</a>
+              <div class="button-container">
+                <button class="see-btn" data-event-id="waitapproved-002">Xem</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="content-card">
+            <div class="content-image">
+              <img src="https://scontent.fdad3-5.fna.fbcdn.net/v/t39.30808-6/574564898_1454449043350192_975546984353294738_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=102&ccb=1-7&_nc_sid=127cfc&_nc_ohc=DbVvXUIpWswQ7kNvwEplIRf&_nc_oc=Adkrhn0-C1Z8GGRP-GsVnV2tzE66XSS4fAYNjXzSkodfHlOMmi59QC3oQnwi-da3Prs&_nc_zt=23&_nc_ht=scontent.fdad3-5.fna&_nc_gid=buV18m_Nwv2DDvmT51wa3Q&oh=00_AfiKckUAZlbGIFB8aqHoUoTYMy42Oruc4C4zfOFAfVUCmg&oe=692BBE9B" alt="Khoảnh khắc đẹp tại sự kiện">
+            </div>
+            <div class="content-info">
+              <div class="date">
+                <p>MARTIST – KHI THANH XUÂN CẤT TIẾNG</p>
+                <div class="status-badge disapproved">Hết hạn</div>
+              </div>
+              <div class="event-info">
+                <p>"Tuổi trẻ – đừng im lặng. Hãy để âm nhạc nói thay lòng mình." Và đó chính là thông điệp của "MArtist - Khi thanh xuân cất tiếng"!
+💫Năm nay, Gala D25 trở lại với một sắc màu đặc biệt – cuộc thi "MArtist – Khi thanh xuân cất tiếng", nơi âm nhạc, cảm xúc và nhiệt huyết tuổi trẻ hòa quyện để chào đón những chiến binh D25 – thế hệ tình nguyện viên mới đầy năng lượng. </p>
+                <p>⏰ Thời gian: 7:00 25/11/2026 - 15:00 25/11/2026</p>
+                <p>📅 Hạn đăng ký: 20:00 24/11/2026</p>
+                <p>📍 Địa điểm: Hội trường D – Học viện Công nghệ Bưu chính Viễn thông</p>
+                <p>🏢 Tổ chức: LCD Marketing</p>
+              </div>    
+              <div class="mxh">
+                <div class="mxh-web">Web</div>
+              </div>
+              <a class="dki" href=" https://forms.gle/SoMUjShn7mnULVUT9">Link đăng ký →</a>
+              <div class="button-container">
+                <button class="see-btn" data-event-id="waitapproved-003">Xem</button>
+              </div>
+            </div>
+          </div>
+           </div>
+          
+        </div>
+      </div>
+
+      <!-- Tab Đã duyệt -->
+      <div class="tab-content" id="approved-content">
+        <div class="event-card">
+          <!-- Card 1 -->
+          <div class="content-card">
+            <div class="content-image">
+              <img src="https://scontent.fdad3-4.fna.fbcdn.net/v/t39.30808-6/545054403_1242826237861546_7230088209638397878_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=104&ccb=1-7&_nc_sid=127cfc&_nc_ohc=BBqxo0nZs88Q7kNvwHOt-r5&_nc_oc=Adn4SmsLuB2HqqYCvvwRynPq2xyQVGwHrQIZn184TfXuuH4RYw2f6l7fTg4CfBFEKZQ&_nc_zt=23&_nc_ht=scontent.fdad3-4.fna&_nc_gid=LWxGyBhPoEnbh4fZYvyB_Q&oh=00_AfgPkXOShQbs2TOAvaanBb81YF18o4FW43VDOmdkmHDaAA&oe=692BCEF6" alt="Khoảnh khắc đẹp tại sự kiện">
+            </div>
+            <div class="content-info">
+              <div class="date">
+                <p>THE ASTRO - THE INFINITY GENERATION</p>
+                <div class="status-badge approved">Còn hạn</div>
+              </div>
+              <div class="event-info">
+                <p>CHÍNH THỨC MỞ ĐƠN ĐĂNG KÝ TUYỂN THÀNH VIÊN: THE ASTRO - THE INFINITY GENERATION</p>
+                <p>⏰ Thời gian: 7:30 2/12/2025 - 17:00 2/12/2025</p>
+                <p>📅 Hạn đăng ký: 20:00 24/11/2025</p>
+                <p>📍 Địa điểm: Hội trường D, Học viện Công nghệ Bưu chính Viễn thông – Cơ sở TP.HCM</p>
+                <p>🏢 Tổ chức: LCDCNDPT</p>
+              </div>    
+              <div class="mxh">
+                <div class="mxh-web">Web</div>
+              </div>
+              <a class="dki" href="https://forms.gle/7pVGy2kN9t7WJRbr6">Link đăng ký →</a>
+              <div class="button-container"> 
+                <button class="delete-btn">Xóa</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="content-card">
+            <div class="content-image">
+              <img src="https://scontent.fdad3-4.fna.fbcdn.net/v/t39.30808-6/566219856_1231088645726163_5271916207151874176_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=h51wD-vw-BkQ7kNvwHX9X1p&_nc_oc=Adnyv-SpShf0Oh2NXDIiIlKzVvSiP9-Zr0AjcL1PDlR-XwdE-IvEWiFmG-pU3oVHpUc&_nc_zt=23&_nc_ht=scontent.fdad3-4.fna&_nc_gid=8kYYM8rHvcavUSCoL--kCQ&oh=00_AfiiPuJ0eeCTNFK5SmIdSTUd2-zkj3bEVUToDkppaFDwgw&oe=692BC395" alt="Khoảnh khắc đẹp tại sự kiện">
+            </div>
+            <div class="content-info">
+              <div class="date">
+                <p>HCM PTIT MULTIMEDIA 2025</p>
+                <div class="status-badge disapproved">Hết hạn</div>
+              </div>
+              <div class="event-info">
+                <p>Để chính thức khởi động cho sân chơi dành riêng cho sinh viên ngành Công nghệ Đa Phương Tiện, cuộc thi "HCM PTIT MULTIMEDIA 2025" chính thức khoác lên mình "chiếc áo" mới, sẵn sàng cùng các bạn Biến Ý Tưởng thành Hiện Thực!
+                 Cùng nhau tạo nên DẤU ẤN MULTIMEDIA bùng nổ! 🔥</p>
+                <p>⏰ Thời gian: 7:30 2/12/2026 - 17:00 2/11/2026</p>
+                <p>📅 Hạn đăng ký: 24:00 23/11/2026</p>
+                <p>📍 Địa điểm: Hội trường 2A08, Học viện Công nghệ Bưu chính Viễn thông – Cơ sở TP.HCM</p>
+                <p>🏢 Tổ chức: LCDCNDPT</p>
+              </div>    
+              <div class="displaymxh">
+                <div class="mxh">
+                  <div class="mxh-web">Web</div>
+                </div>
+                <div class="fb">
+                  <div class="fb-content">Facebook</div>
+                </div>
+                <div class="zalo">
+                  <div class="zalo-content">Zalo</div>
+                </div>
+              </div>
+              <a class="dki" href="#">Link đăng ký →</a>
+              <div class="button-container"> 
+                <button class="delete-btn">Xóa</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal tạo sự kiện -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>TẠO SỰ KIỆN MỚI</h2>
+        <button class="close-btn" id="closeModalBtn">&times;</button>
+      </div>
+      
+      <div class="modal-body">
+        <!-- Bước 1: Thông tin cơ bản -->
+        <div class="step-content active" id="step1">
+          <form id="createEventForm">
+            <div class="form-group">
+              <label for="eventName">Tên sự kiện</label>
+              <input type="text" id="eventName" placeholder="Nhập tên sự kiện" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="eventDescription">Mô tả</label>
+              <textarea id="eventDescription" placeholder="Nhập mô tả về sự kiện" rows="3"></textarea>
+            </div>
+
+            <div class="display">
+              <div class="form-group">
+                <label for="eventStartTime">Thời gian bắt đầu</label>
+                <input type="datetime-local" id="eventStartTime" placeholder="Nhập thời gian sự kiện" required>
+              </div>
+
+              <div class="form-group">
+                <label for="eventEndTime">Thời gian kết thúc</label>
+                <input type="datetime-local" id="eventEndTime" placeholder="Nhập thời gian sự kiện" required>
+              </div>
+            </div>
+           
+            <div class="display">
+              <div class="form-group">
+                <label for="registrationDeadline">Hạn đăng ký</label>
+                <input type="datetime-local" id="registrationDeadline" placeholder="Nhập thời gian sự kiện" required>
+              </div>
+
+              <div class="form-group">
+                <label for="eventOrganization">Tổ chức</label>
+                <div class="select">
+                  <select id="eventOrganization" name="major">
+                    <option value="-----">-----</option>
+                    <option value="LCDCNDPT">LCDCNDPT</option>
+                    <option value="A'Zone">A'Zone</option>
+                    <option value="ITMC">ITMC</option>
+                    <option value="C.MC">C.MC</option>
+                    <option value="CSV">CSV</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="eventLocation">Địa điểm</label>
+              <input type="text" id="eventLocation" placeholder="Nhập địa điểm" required>
+            </div>
+
+            <div class="form-group">
+              <label for="registrationLink">Link đăng ký</label>
+              <input type="text" id="registrationLink" placeholder="Nhập link đăng ký" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="eventImage">Ảnh bìa sự kiện</label>
+              <div class="file-upload">
+                <input type="file" id="eventImage" accept="image/*" style="display: none;">
+                <button type="button" class="upload-btn" id="uploadBtn">Chọn ảnh</button>
+                <span class="file-name" id="fileName">Chưa có ảnh nào được chọn</span>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="cancel-btn" id="cancelBtn">Hủy</button>
+              <button type="button" class="submit-btn" id="nextToSocial">Tiếp theo</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Bước 2: Chọn mạng xã hội -->
+        <div class="step-content" id="step2">
+          <div class="social-selection">
+            <h3>Chọn kênh đăng bài</h3>
+            <div class="channel-list">
+              <label class="channel-item">
+                <input type="checkbox" name="socialChannels" value="web" checked>
+                <span class="checkmark"></span>
+                <span class="channel-info">
+                  <strong>Web (mặc định)</strong>
+                  <small>Đăng trên website chính</small>
+                </span>
+              </label>
+              
+              <label class="channel-item">
+                <input type="checkbox" name="socialChannels" value="facebook">
+                <span class="checkmark"></span>
+                <span class="channel-info">
+                  <strong>Facebook page</strong>
+                  <small>Đăng lên trang Facebook</small>
+                </span>
+              </label>
+              
+              <label class="channel-item">
+                <input type="checkbox" name="socialChannels" value="zalo">
+                <span class="checkmark"></span>
+                <span class="channel-info">
+                  <strong>Zalo</strong>
+                  <small>Đăng lên Zalo OA</small>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="cancel-btn" id="backToStep1">Quay lại</button>
+            <button type="button" class="submit-btn" id="createEvent">Đăng</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal sửa sự kiện -->
+  <div class="modal-overlay" id="editModalOverlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>CHỈNH SỬA SỰ KIỆN</h2>
+        <button class="close-btn" id="closeEditModalBtn">&times;</button>
+      </div>
+      
+      <div class="modal-body">
+        <form id="editEventForm">
+          <input type="hidden" id="editEventId">
+          
+          <div class="form-group">
+            <label for="editEventName">Tên sự kiện</label>
+            <input type="text" id="editEventName" placeholder="Nhập tên sự kiện" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="editEventDescription">Mô tả</label>
+            <textarea id="editEventDescription" placeholder="Nhập mô tả về sự kiện" rows="3"></textarea>
+          </div>
+
+          <div class="display">
+            <div class="form-group">
+              <label for="editEventStartTime">Thời gian bắt đầu</label>
+              <input type="datetime-local" id="editEventStartTime" required>
+            </div>
+
+            <div class="form-group">
+              <label for="editEventEndTime">Thời gian kết thúc</label>
+              <input type="datetime-local" id="editEventEndTime" required>
+            </div>
+          </div>
+         
+          <div class="display">
+            <div class="form-group">
+              <label for="editRegistrationDeadline">Hạn đăng ký</label>
+              <input type="datetime-local" id="editRegistrationDeadline" required>
+            </div>
+
+            <div class="form-group">
+              <label for="editEventOrganization">Tổ chức</label>
+              <div class="select">
+                <select id="editEventOrganization" name="major">
+                  <option value="-----">-----</option>
+                  <option value="LCDCNDPT">LCDCNDPT</option>
+                  <option value="A'Zone">A'Zone</option>
+                  <option value="ITMC">ITMC</option>
+                  <option value="C.MC">C.MC</option>
+                  <option value="CSV">CSV</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="editEventLocation">Địa điểm</label>
+            <input type="text" id="editEventLocation" placeholder="Nhập địa điểm" required>
+          </div>
+
+          <div class="form-group">
+            <label for="editRegistrationLink">Link đăng ký</label>
+            <input type="text" id="editRegistrationLink" placeholder="Nhập link đăng ký" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="editEventImage">Ảnh bìa sự kiện</label>
+            <div class="file-upload">
+              <input type="file" id="editEventImage" accept="image/*" style="display: none;">
+              <button type="button" class="upload-btn" id="editUploadBtn">Chọn ảnh</button>
+              <span class="file-name" id="editFileName">Chưa có ảnh nào được chọn</span>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="cancel-btn" id="cancelEditBtn">Hủy</button>
+            <button type="submit" class="update-btn">Cập nhật</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+   
+
+  <!-- Modal xem thông tin sự kiện -->
+<div class="modal-overlay" id="viewModalOverlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>CHI TIẾT SỰ KIỆN</h2>
+            <button class="close-btn" id="closeViewModalBtn">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+            <div class="event-detail-view">
+                <!-- Hiển thị ảnh sự kiện -->
+                <div class="event-image-view">
+                    <img id="viewEventImage" src="" alt="Ảnh sự kiện">
+                </div>
+                
+                <!-- Thông tin chi tiết -->
+                <div class="event-info-view">
+                    <div class="info-group">
+                        <label>Tên sự kiện:</label>
+                        <span id="viewEventName" class="info-text"></span>
+                    </div>
+                    
+                    <div class="info-group">
+                        <label>Mô tả:</label>
+                        <span id="viewEventDescription" class="info-text description-text"></span>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-group">
+                            <label>Thời gian bắt đầu:</label>
+                            <span id="viewEventStartTime" class="info-text"></span>
+                        </div>
+                        
+                        <div class="info-group">
+                            <label>Thời gian kết thúc:</label>
+                            <span id="viewEventEndTime" class="info-text"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-group">
+                            <label>Hạn đăng ký:</label>
+                            <span id="viewRegistrationDeadline" class="info-text"></span>
+                        </div>
+                        
+                        <div class="info-group">
+                            <label>Tổ chức:</label>
+                            <span id="viewEventOrganization" class="info-text"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-group">
+                        <label>Địa điểm:</label>
+                        <span id="viewEventLocation" class="info-text"></span>
+                    </div>
+                    
+                    <div class="info-group">
+                        <label>Link đăng ký:</label>
+                        <a id="viewRegistrationLink" href="#" target="_blank" class="info-link">Truy cập link đăng ký</a>
+                    </div>
+                    
+                    <div class="info-group">
+                        <label>Trạng thái:</label>
+                        <span id="viewEventStatus" class="status-badge"></span>
+                    </div>
+                    
+                    <div class="info-group">
+                        <label>Kênh đăng bài:</label>
+                        <div id="viewSocialChannels" class="channels-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nút hành động -->
+            <div class="view-action-buttons">
+                <button type="button" class="approve-btn-action" id="approveEventBtn">Duyệt</button>
+                <button type="button" class="reject-btn-action" id="rejectEventBtn">Từ chối</button>
+                <button type="button" class="cancel-btn" id="closeViewBtn">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal xác nhận -->
+<div class="modal-overlay" id="confirmModalOverlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Xác nhận</h3>
+            <button class="close-btn close-confirm-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p id="confirmMessage">Bạn có chắc chắn muốn xóa sự kiện này?</p>
+        </div>
+        <div class="modal-actions">
+            <button class="cancel-btn cancel-confirm-btn">Hủy</button>
+            <button class="confirm-btn">Xác nhận</button>
+        </div>
+    </div>
+</div>
+
+  <script src="script/qlsk.js"></script>
+</body>
+</html>

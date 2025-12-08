@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Event Portal - Tổ chức</title>
+  <link rel="stylesheet" href="style/seo.css" />
+</head>
+<body>
+  <div class="sidebar">
+    <h2>EVENT PORTAL</h2>
+
+    <ul class="menu">
+      <li><a href="tke.html">Thống kê</a></li>
+      <li><a href="tochuc.html">Tổ chức</a></li>
+      <li><a href="qlsk.html">Quản lý sự kiện</a></li>
+      <li><a href="qlnd.html">Quản lý nội dung (UGC)</a></li>
+      <li><a href="mxh.html">Mạng xã hội</a></li>
+      <li class="active"><a href="seo.html">Cài đặt SEO</a></li>
+    </ul>
+
+    <div class="logout">
+      <div class="user-info">ABC<br><small>Admin</small></div><br>
+      <button class="logout-btn">Đăng xuất</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="header-container">
+      <div class="title-section">
+        <h1>Cài đặt SEO</h1>
+        <div class="sub">Quản lý SEO Meta tags</div>
+      </div>
+    </div>
+
+    <div class="content-sections">
+      <div class="section">
+        <h2>Cài đặt SEO</h2>
+        <div class="sub">Tối ưu hóa SEO cho trang web</div>
+        
+        <div class="form-group">
+          <label for="metaTitle">Tiêu đề Meta</label>
+          <input type="text" id="metaTitle" value="Cổng sự kiện festival sinh viên">
+        </div>
+        
+        <div class="form-group">
+          <label for="metaDescription">Mô tả Meta</label>
+          <textarea id="metaDescription">Nền tảng cung cấp sự kiện, lễ hội dành cho sinh viên</textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="metaKeywords">Từ khóa Meta</label>
+          <input type="text" id="metaKeywords" value="festival, sinh viên, sự kiện">
+        </div>
+
+        <button class="save-btn" id="saveSeoBtn">Lưu cài đặt SEO</button>
+        
+        <div class="preview-section">
+          <h3>Xem trước:</h3>
+          <div class="preview-box">
+            <div class="preview-title">Cổng sự kiện festival sinh viên</div>
+            <div class="preview-url">https://youreventportal.com</div>
+            <div class="preview-description">Nền tảng cung cấp sự kiện, lễ hội dành cho sinh viên</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="section">
+        <h2>Thông tin liên lạc</h2>
+        <div class="sub">Thông tin liên lạc</div>
+        
+        <div class="form-group">
+          <label for="contactEmail">Email</label>
+          <input type="email" id="contactEmail" value="admin@admin.com">
+        </div>
+        
+        <div class="form-group">
+          <label for="contactPhone">Số điện thoại</label>
+          <input type="tel" id="contactPhone" value="01234567890">
+        </div>
+        
+        <div class="form-group">
+          <label for="contactAddress">Địa chỉ</label>
+          <input type="text" id="contactAddress" value="Học viện công nghệ bưu chính viễn thông">
+        </div>
+        
+        <button class="save-btn" id="saveContactBtn">Lưu thông tin liên lạc</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script/seo.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng nhập</title>
+  <link rel="stylesheet" href="style/style.css" />
+</head>
+<body>
+  <div class="login-container">
+    <h2>ĐĂNG NHẬP</h2>
+
+    <div class="input-group">
+      <label><img src="picture/mail.png" class="icon" /> Email:</label>
+      <input type="email" placeholder="Nhập email của bạn" />
+    </div>
+    
+    <div class="input-group password-wrapper">
+      <label><img src="picture/matkhau.png" class="icon" />Mật khẩu:</label>
+      <input id="password" type="password" placeholder="Nhập mật khẩu" />
+      <img src="picture/eye-off.png" id="toggleIcon" class="password-toggle" onclick="togglePassword()" />
+    </div>
+
+    <a href="tke.html">
+      <button class="login-btn">Đăng nhập</button>
+    </a>
+  </div>
+
+  <script src="script/login.js"></script>
+</body>
+</html>

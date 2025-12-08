@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVENT PORTAL - Quản lý tổ chức</title>
+    <link rel="stylesheet" href="style/tochuc.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+    <h2>EVENT PORTAL</h2>
+
+    <ul class="menu">
+      <li><a href="tke.html">Thống kê</a></li>
+      <li class="active"><a href="tochuc.html">Tổ chức</a></li>
+      <li><a href="qlsk.html">Quản lý sự kiện</a></li>
+      <li><a href="qlnd.html">Quản lý nội dung (UGC)</a></li>
+      <li><a href="mxh.html">Mạng xã hội</a></li>
+      <li><a href="seo.html">Cài đặt SEO</a></li>
+    </ul>
+        <div class="logout">
+            <div class="user-info">ABC<br><small>Admin</small></div><br>
+            <button class="logout-btn">Đăng xuất</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+     <div class="header-container">
+       <div class="title-section">
+         <h1>Tổ chức</h1>
+          <div class="sub">Tạo và quản lý các tổ chức tổ chức tại Viện</div>
+        </div>
+         <button class="add-org-btn" id="addOrgBtn">+ Thêm tổ chức</button>
+        </div>
+
+    <!-- Organization Cards -->
+    <div class="cards">
+    <!-- Card 1 -->
+     <div class="card" data-id="1">
+      <div class="tieude">
+        <div class="avatar">
+          <img src="picture/lcdcndpt.jpg" alt="LCDCNDPT">
+        </div>
+      <div>
+        <h3>LCDCNDPT</h3>
+        </div>
+     </div>
+        <p>LCĐ Công Nghệ Đa Phương Tiện</p>
+        <a href="mailto:lcdcndpt@student.ptithcm.edu.vn" class="email">lcdcndpt@student.ptithcm.edu.vn</a>
+        <a href="https://www.facebook.com/multimediaptithcm" class="fanpage" target="_blank">https://www.facebook.com/multimediaptithcm</a>
+        <div class="actions">
+        <button class="edit" data-id="1">Sửa</button>
+        <button class="delete" data-id="1">Xóa</button>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+     <div class="card" data-id="2">
+      <div class="tieude">
+        <div class="avatar">
+          <img src="picture/csv.jpg" alt="csv">
+        </div>
+      <div>
+        <h3>CSV</h3>
+        </div>
+     </div>
+        <p>Chương Trình CHÀO SINH VIÊN - PTIT HCM</p>
+        <a href="mailto:doanthanhnien.ptithcm@gmail.com" class="email">doanthanhnien.ptithcm@gmail.com</a>
+        <a href="https://www.facebook.com/chaosinhvienptithcm" class="fanpage" target="_blank">https://www.facebook.com/chaosinhvienptithcm</a>
+        <div class="actions">
+        <button class="edit" data-id="2">Sửa</button>
+        <button class="delete" data-id="2">Xóa</button>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+     <div class="card" data-id="3">
+      <div class="tieude">
+        <div class="avatar">
+          <img src="picture/marketing.jpg" alt="LCĐ Marketing">
+        </div>
+      <div>
+        <h3>LCĐ Marketing</h3>
+        </div>
+     </div>
+        <p>LCĐ Marketing - PTIT HCM</p>
+        <a href="mailto:lcdmarketing@student.ptithcm.edu.vn" class="email">lcdmarketing@student.ptithcm.edu.vn</a>
+        <a href="https://www.facebook.com/lcdmarketing.ptithcm" class="fanpage" target="_blank">https://www.facebook.com/lcdmarketing.ptithcm</a>
+        <div class="actions">
+        <button class="edit" data-id="3">Sửa</button>
+        <button class="delete" data-id="3">Xóa</button>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+     <div class="card" data-id="4">
+      <div class="tieude">
+        <div class="avatar">
+          <img src="picture/cmc.jpg" alt="cmc">
+        </div>
+      <div>
+        <h3>CLB C.MC</h3>
+        </div>
+     </div>
+        <p>CLB Truyền Thông C.MC</p>
+        <a href="mailto:clb.truyenthongcmc@student.ptithcm.edu.vn" class="email">clb.truyenthongcmc@student.ptithcm.edu.vn</a>
+        <a href="https://www.facebook.com/CLBCMC" class="fanpage" target="_blank">https://www.facebook.com/CLBCMC</a>
+        <div class="actions">
+        <button class="edit" data-id="4">Sửa</button>
+        <button class="delete" data-id="4">Xóa</button>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+     <div class="card" data-id="5">
+      <div class="tieude">
+        <div class="avatar">
+          <img src="picture/itmc.jpg" alt="itmc">
+        </div>
+      <div>
+        <h3>CLB ITMC</h3>
+        </div>
+     </div>
+        <p>Information Technology Multimedia Club</p>
+        <a href="mailto:clb.itmc@student.ptithcm.edu.vn" class="email">clb.itmc@student.ptithcm.edu.vn</a>
+        <a href="https://www.facebook.com/it.multimedia.club" class="fanpage" target="_blank">https://www.facebook.com/it.multimedia.club</a>
+        <div class="actions">
+        <button class="edit" data-id="5">Sửa</button>
+        <button class="delete" data-id="5">Xóa</button>
+      </div>
+    </div>
+    </div>
+
+    <!-- Modal for Add/Edit Organization -->
+    <div class="modal-overlay" id="orgModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Thêm tổ chức</h2>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="orgForm">
+                    <input type="hidden" id="orgId" value="">
+                    <div class="form-group">
+                        <label for="orgName">Tên tổ chức</label>
+                        <input type="text" id="orgName" placeholder="Nhập tên tổ chức" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="orgDescription">Mô tả</label>
+                        <textarea id="orgDescription" rows="3" placeholder="Nhập mô tả tổ chức"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="orgEmail">Email</label>
+                        <input type="email" id="orgEmail" placeholder="Nhập email tổ chức">
+                    </div>
+                    <div class="form-group">
+                        <label for="orgFanpage">Fanpage</label>
+                        <input type="url" id="orgFanpage" placeholder="Nhập link fanpage">
+                    </div>
+                    <div class="form-group">
+                        <label>Avatar tổ chức</label>
+                        <div class="file-upload">
+                            <button type="button" class="upload-btn" id="uploadAvatarBtn">Chọn ảnh</button>
+                            <span class="file-name" id="avatarFileName">Chưa có ảnh nào được chọn</span>
+                        </div>
+                        <input type="file" id="orgAvatar" accept="image/*" style="display: none;">
+                        <div class="avatar-preview" id="avatarPreview" style="margin-top: 10px; display: none;">
+                            <img id="previewImage" src="" alt="Preview" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #ddd;">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn" id="cancelBtn">Hủy</button>
+                        <button type="submit" class="create-btn" id="submitBtn">Tạo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script/tochuc.js"></script>
+</body>
+</html>

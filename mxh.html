@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Event Portal - Tổ chức</title>
+  <link rel="stylesheet" href="style/mxh.css" />
+</head>
+<body>
+  <div class="sidebar">
+    <h2>EVENT PORTAL</h2>
+
+    <ul class="menu">
+      <li><a href="tke.html">Thống kê</a></li>
+      <li><a href="tochuc.html">Tổ chức</a></li>
+      <li><a href="qlsk.html">Quản lý sự kiện</a></li>
+      <li><a href="qlnd.html">Quản lý nội dung (UGC)</a></li>
+      <li class="active"><a href="mxh.html">Mạng xã hội</a></li>
+      <li><a href="seo.html">Cài đặt SEO</a></li>
+    </ul>
+
+    <div class="logout">
+      <div class="user-info">ABC<br><small>Admin</small></div><br>
+      <button class="logout-btn">Đăng xuất</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="header-container">
+      <div class="title-section">
+        <h1>Social media</h1>
+        <div class="sub">Quản lý danh sách mạng xã hội</div>
+      </div>
+      <button class="add-org-btn" id="openModalBtn">+ Thêm mới</button>
+    </div>
+
+    <div class="cards">
+      <!-- CARD 1 -->
+      <div class="card">
+        <h3>Facebook</h3>
+        <a class="web" href="#">www.facebook.com/eventportal</a>
+        <div class="actions">
+          <button class="edit" data-org-id="1" data-org-name="Facebook" data-org-link="www.facebook.com/eventportal">Sửa</button>
+          <button class="delete">Xóa</button>
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="card">
+        <h3>Zalo</h3>
+        <a class="web" href="#">www.zalo.com/eventportal</a>
+
+        <div class="actions">
+          <button class="edit" data-org-id="2" data-org-name="Zalo" data-org-link="www.zalo.com/eventportal">Sửa</button>
+          <button class="delete">Xóa</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL TẠO mxh MỚI -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Thêm social media</h2>
+        <button class="close-btn" id="closeModalBtn">&times;</button>
+      </div>
+      
+      <div class="modal-body">
+        <form id="createOrgForm">
+          <div class="form-group">
+            <label for="orgName">Tên</label>
+            <input type="text" id="orgName" placeholder=" " required>
+          </div>
+          
+          <div class="form-group">
+            <label for="orgLink">Link</label>
+            <input type="text" id="orgLink" placeholder=" " required>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="cancel-btn" id="cancelBtn">Hủy</button>
+            <button type="submit" class="create-btn">Tạo</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<!-- Modal Chỉnh sửa -->
+<div id="editModalOverlay" class="modal-overlay">
+    <div class="modal-content"> <!-- Thay đổi từ .modal thành .modal-content -->
+        <div class="modal-header">
+            <h2>Chỉnh sửa Social Media</h2>
+            <button id="closeEditBtn" class="close-btn">&times;</button>
+        </div>
+        <form id="editOrgForm">
+            <input type="hidden" id="editOrgId">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="editOrgName">Tên social media</label>
+                    <input type="text" id="editOrgName" placeholder="Nhập tên social media" required>
+                </div>
+                <div class="form-group">
+                    <label for="editOrgLink">Link</label>
+                    <input type="text" id="editOrgLink" placeholder="https://example.com" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="cancelEditBtn" class="cancel-btn">Hủy</button>
+                    <button type="submit" class="create-btn">Cập nhật</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+  
+<!-- Modal xác nhận -->
+<div class="modal-overlay" id="confirmModalOverlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Xác nhận</h3>
+            <button class="close-btn close-confirm-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p id="confirmMessage">Bạn có chắc chắn muốn xóa social media này?</p>
+        </div>
+        <div class="modal-actions">
+            <button class="cancel-btn cancel-confirm-btn">Hủy</button>
+            <button class="confirm-btn">Xác nhận</button>
+        </div>
+    </div>
+</div>
+  <script src="script/mxh.js"></script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Event Portal - Thống kê</title>
+  <link rel="stylesheet" href="style/tke.css" />
+</head>
+<body>
+  <div class="sidebar">
+    <h2>EVENT PORTAL</h2>
+
+    <ul class="menu">
+      <li class="active"><a href="tke.html">Thống kê</a></li>
+      <li><a href="tochuc.html">Tổ chức</a></li>
+      <li><a href="qlsk.html">Quản lý sự kiện</a></li>
+      <li><a href="qlnd.html">Quản lý nội dung (UGC)</a></li>
+      <li><a href="mxh.html">Mạng xã hội</a></li>
+      <li><a href="seo.html">Cài đặt SEO</a></li>
+    </ul>
+
+    <div class="logout">
+      <div class="user-info">ABC<br><small>Admin</small></div><br>
+      <button id="logout-btn" class="logout-btn">Đăng xuất</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <h1>Thống kê</h1>
+    <div class="sub">Thống kê và tổng quan hệ thống</div>
+
+    <div class="stats">
+      <div class="card card-purple value">
+        <div class="value">4</div>
+        <h4>Tổng sự kiện</h4>
+      </div>
+      <div class="card card-orange value">
+        <div class="value">3</div>
+        <h4>Sự kiện mới (Chờ duyệt)</h4>
+      </div>
+      <div class="card card-blue value">
+        <div class="value">3</div>
+        <h4>Nội dung chờ duyệt</h4>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="card">
+        <img class="avatar" src="picture/user.jpg" alt="">
+        <h3>Tổng người dùng</h3>
+        <div class="value-small">1,250</div>
+      </div>
+      <div class="card">
+        <img class="avatar" src="picture/see.jpg" alt="">
+        <h3>Lượt xem trang</h3>
+        <div class="value-small">125,678</div>
+      </div>
+      <div class="card">
+        <img class="avatar" src="picture/time.jpg" alt="">
+        <h3>Thời gian trung bình</h3>
+        <div class="value-small">3.24</div>
+      </div>
+    </div>
+
+    <div class="chart-box">
+      <div class="chart-title">Phân bố theo tổ chức</div>
+      <div class="chart-container">
+        <canvas id="pieChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-box">
+      <div class="chart-title">Biểu đồ sự kiện theo tháng</div>
+      <div class="chart-container">
+        <canvas id="barChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script/tke.js"></script>
+</body>
+</html>
