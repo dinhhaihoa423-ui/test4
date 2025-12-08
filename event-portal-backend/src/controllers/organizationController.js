@@ -1,4 +1,4 @@
-const { Organization } = require('../models');
+const Organization = require('../models/Organization');   ← ĐÚNG
 const { v2: cloudinary } = require('cloudinary');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
@@ -87,3 +87,4 @@ exports.delete = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
