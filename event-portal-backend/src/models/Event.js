@@ -1,14 +1,9 @@
 // src/models/Event.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const Organization = require('./Organization');
 
 const Event = sequelize.define('Event', {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
-  },
+  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
   name: { type: DataTypes.STRING, allowNull: false },
   description: { type: DataTypes.TEXT },
   startTime: { type: DataTypes.DATE, allowNull: false },
@@ -16,19 +11,13 @@ const Event = sequelize.define('Event', {
   registrationDeadline: { type: DataTypes.DATE, allowNull: false },
   location: { type: DataTypes.STRING, allowNull: false },
   registrationLink: { type: DataTypes.STRING, allowNull: false },
-  image: { type: DataTypes.STRING }, // Cloudinary URL
-  status: {
-    type: DataTypes.ENUM('created', 'pending', 'approved'),
+  coverImage: { type: DataTypes.STRING }, // Cloudinary URL
+  organizationId: { type: DataTypes.INTEGER, allowNull: false },
+  status: { 
+    type: DataTypes.ENUM('created', 'pending', 'approved', 'rejected'),
     defaultValue: 'created'
   },
-  channels: { type: DataTypes.JSON, defaultValue: ['web'] }, // ['web', 'facebook', 'zalo']
-  organizationId: {
-    type: DataTypes.INTEGER,
-    references: { model: Organization, key: 'id' }
-  }
+  channels: { type: DataTypes.JSON, defaultValue: ['web'] }
 }, { timestamps: true });
-
-Event.belongsTo(Organization, { foreignKey: 'organizationId' });
-Organization.hasMany(Event, { foreignKey: 'organizationId' });
 
 module.exports = Event;
