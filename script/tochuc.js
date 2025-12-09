@@ -1,5 +1,5 @@
 // ==================== CẤU HÌNH ====================
-const API_BASE = 'https://event-portal-mhgm.onrender.com';   // ← URL backend của bạn
+const API_BASE = 'https://test4-7cop.onrender.com';   // ← URL backend của bạn
 let organizations = [];           // Dữ liệu thật lấy từ server
 let selectedAvatarFile = null;    // File ảnh được chọn
 
