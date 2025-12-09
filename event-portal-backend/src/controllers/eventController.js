@@ -18,14 +18,13 @@ const storage = new CloudinaryStorage({
     allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
   },
 });
-
 const upload = multer({ storage });
 
-// GET all + populate organization
+// GET all events (phân loại theo status)
 exports.getAll = async (req, res) => {
   try {
     const events = await Event.findAll({
-      include: [{ model: Organization, attributes: ['id', 'name'] }],
+      include: [{ model: Organization, attributes: ['name'] }],
       order: [['createdAt', 'DESC']]
     });
     res.json(events);
@@ -36,22 +35,19 @@ exports.getAll = async (req, res) => {
 
 // CREATE
 exports.create = [
-  upload.single('image'),
+  upload.single('coverImage'),
   async (req, res) => {
     try {
-      const { name, description, startTime, endTime, registrationDeadline, location, registrationLink, organizationId, channels } = req.body;
-      const image = req.file ? req.file.path : null;
-
+      const coverImage = req.file ? req.file.path : null;
       const event = await Event.create({
-        name, description, startTime, endTime, registrationDeadline,
-        location, registrationLink, image,
-        organizationId, channels: JSON.parse(channels || '["web"]')
+        ...req.body,
+        coverImage,
+        organizationId: parseInt(req.body.organizationId),
+        channels: req.body.channels ? JSON.parse(req.body.channels) : ['web']
       });
-
       const result = await Event.findByPk(event.id, {
         include: [{ model: Organization, attributes: ['name'] }]
       });
-
       res.status(201).json(result);
     } catch (err) {
       res.status(400).json({ error: err.message });
@@ -61,21 +57,19 @@ exports.create = [
 
 // UPDATE
 exports.update = [
-  upload.single('image'),
+  upload.single('coverImage'),
   async (req, res) => {
     try {
       const event = await Event.findByPk(req.params.id);
       if (!event) return res.status(404).json({ error: 'Không tìm thấy' });
-
-      const { name, description, startTime, endTime, registrationDeadline, location, registrationLink, organizationId, channels } = req.body;
-      const image = req.file ? req.file.path : event.image;
-
+      
+      const coverImage = req.file ? req.file.path : event.coverImage;
       await event.update({
-        name, description, startTime, endTime, registrationDeadline,
-        location, registrationLink, image, organizationId,
-        channels: channels ? JSON.parse(channels) : event.channels
+        ...req.body,
+        coverImage,
+        organizationId: parseInt(req.body.organizationId),
+        channels: req.body.channels ? JSON.parse(req.body.channels) : event.channels
       });
-
       const updated = await Event.findByPk(event.id, {
         include: [{ model: Organization, attributes: ['name'] }]
       });
@@ -91,29 +85,13 @@ exports.delete = async (req, res) => {
   try {
     const event = await Event.findByPk(req.params.id);
     if (!event) return res.status(404).json({ error: 'Không tìm thấy' });
-
-    if (event.image) {
-      const publicId = event.image.split('/').slice(-2).join('/').split('.')[0];
+    if (event.coverImage && event.coverImage.includes('cloudinary')) {
+      const publicId = event.coverImage.split('/').slice(-2).join('/').split('.')[0];
       await cloudinary.uploader.destroy(publicId);
     }
-
     await event.destroy();
     res.json({ message: 'Xóa thành công' });
   } catch (err) {
     res.status(500).json({ error: err.message });
-  }
-};
-
-// CHANGE STATUS (duyệt/từ chối)
-exports.changeStatus = async (req, res) => {
-  try {
-    const { status } = req.body; // 'pending' hoặc 'approved'
-    const event = await Event.findByPk(req.params.id);
-    if (!event) return res.status(404).json({ error: 'Không tìm thấy' });
-
-    await event.update({ status });
-    res.json({ message: 'Cập nhật trạng thái thành công' });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
   }
 };
