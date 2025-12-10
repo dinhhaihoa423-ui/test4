@@ -96,6 +96,59 @@ if (ugcCount === 0 || true) { // || true để force reseed 1 lần
   console.log('ĐÃ RESEED 5 BÀI UGC VỚI ẢNH ONLINE – ẢNH SẼ HIỆN NGAY!');
 }
 
+// ... code cũ ...
+
+// Seed UGC (giữ nguyên nếu có)
+
+// THÊM SEED SAMPLE CHO EVENTS (pending 3, approved 2)
+const eventCount = await Event.count();
+if (eventCount === 0) {
+  await Event.bulkCreate([
+    {
+      title: 'Sự kiện CSV 2025',
+      description: 'Mô tả sự kiện CSV chi tiết...',
+      date: '2025-12-16',
+      location: 'Hà Nội',
+      imageUrl: 'https://i.imgur.com/8JZ1k8P.jpeg', // link online ngắn
+      status: 'pending'
+    },
+    {
+      title: 'ICPC HCMPTIT 2025',
+      description: 'Mô tả ICPC...',
+      date: '2025-12-09',
+      location: 'TP.HCM',
+      imageUrl: 'https://i.imgur.com/Qw1Z9kM.jpeg',
+      status: 'pending'
+    },
+    {
+      title: 'ASTEES COLLECTION REVEAL 2025',
+      description: 'Mô tả ASTEES...',
+      date: '2025-12-17',
+      location: 'Hà Nội',
+      imageUrl: 'https://i.imgur.com/XkL5vP2s.jpeg',
+      status: 'pending'
+    },
+    {
+      title: 'CASTING THE ASTRO - THE INFINITY GEN',
+      description: 'Mô tả Casting Astro...',
+      date: '2025-12-05',
+      location: 'TP.HCM',
+      imageUrl: 'https://i.imgur.com/7pX9m3D.jpeg',
+      status: 'approved'
+    },
+    {
+      title: 'HCM PTIT MULTIMEDIA 2025',
+      description: 'Mô tả Multimedia...',
+      date: '2025-12-07',
+      location: 'TP.HCM',
+      imageUrl: 'https://i.imgur.com/Zf8vR9k.jpeg',
+      status: 'approved'
+    }
+  ]);
+  console.log('Đã seed 5 sự kiện mẫu (3 pending, 2 approved)');
+}
+
+// ... app.listen ...
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`🚀 Server: https://test4-7cop.onrender.com`);
       console.log(`📸 Test ảnh: https://test4-7cop.onrender.com/picture/recapcsv.jpg`);
@@ -108,6 +161,7 @@ if (ugcCount === 0 || true) { // || true để force reseed 1 lần
 }
 
 startServer();
+
 
 
 
