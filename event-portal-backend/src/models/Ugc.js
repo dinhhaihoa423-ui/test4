@@ -4,8 +4,8 @@ const sequelize = require('../config/database');
 const Ugc = sequelize.define('Ugc', {
   id: {
     type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
+    primaryKey: true,
+    autoIncrement: true
   },
   title: {
     type: DataTypes.STRING,
@@ -28,7 +28,8 @@ const Ugc = sequelize.define('Ugc', {
     defaultValue: 'pending'
   }
 }, {
-  timestamps: true
+  timestamps: true,
+  tableName: 'Ugcs' // Tên bảng trong PostgreSQL
 });
 
 module.exports = Ugc;
