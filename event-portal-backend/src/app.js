@@ -4,60 +4,64 @@ const cors = require('cors');
 const path = require('path');
 const sequelize = require('./config/database');
 
-// Models
+// === MODELS ===
 const Organization = require('./models/Organization');
 const Event = require('./models/Event');
-const Ugc = require('./models/Ugc'); // Thêm model UGC
+const Ugc = require('./models/Ugc'); // Model UGC
 
-// Routes
+// === ROUTES ===
 const organizationRoutes = require('./routes/organizationRoutes');
 const eventRoutes = require('./routes/eventRoutes');
-const ugcRoutes = require('./routes/ugcRoutes'); // Thêm route UGC
+const ugcRoutes = require('./routes/ugcRoutes'); // Route UGC mới
 
 const app = express();
 
-// CORS - Cho phép frontend (GitHub Pages, localhost, mọi nơi) gọi API
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  if (req.method === 'OPTIONS') return res.status(200).end();
-  next();
-});
+// ======================
+// CẤT ĐỊNH CƠ BẢN
+// ======================
+app.use(cors({ origin: '*' })); // Cho phép frontend (GitHub Pages, localhost, mọi nơi) gọi API
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Phục vụ file tĩnh
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use('/picture', express.static(path.join(__dirname, '../picture'))); // Thêm để phục vụ ảnh UGC
+app.use('/picture', express.static(path.join(__dirname, '../picture'))); // Quan trọng: phục vụ ảnh UGC
 
-// Routes
+// ======================
+// ROUTES
+// ======================
 app.use('/api/organizations', organizationRoutes);
 app.use('/api/events', eventRoutes);
-app.use('/api/ugc', ugcRoutes); // Route mới cho UGC
+app.use('/api/ugc', ugcRoutes); // Route mới cho quản lý nội dung người dùng
 
-// Test server
+// Test server còn sống
 app.get('/', (req, res) => {
-  res.send('<h1>Backend Event Portal + UGC đang chạy ngon lành!</h1>');
+  res.send(`
+    <h1>Backend Event Portal + UGC đang chạy ngon lành!</h1>
+    <p><strong>API UGC:</strong></p>
+    <ul>
+      <li>GET <a href="/api/ugc/pending">/api/ugc/pending</a></li>
+      <li>GET <a href="/api/ugc/approved">/api/ugc/approved</a></li>
+      <li>POST /api/ugc/update/:id → { "status": "approved" | "rejected" | "archived" }</li>
+    </ul>
+  `);
 });
 
 const PORT = process.env.PORT || 5000;
 
+// ======================
+// KHỞI ĐỘNG SERVER + SEED DATA
+// ======================
 async function startServer() {
   try {
     await sequelize.authenticate();
     console.log('Kết nối PostgreSQL thành công');
 
-    await sequelize.sync({ alter: true }); // Tạo/sửa bảng tự động
-    console.log('Đồng bộ các bảng xong');
+    await sequelize.sync({ alter: true }); // Tạo bảng nếu chưa có, sửa nếu thay đổi
+    console.log('Đồng bộ bảng xong');
 
-    // Seed dữ liệu mẫu UGC nếu chưa có
+    // Seed 5 bài UGC mẫu (chỉ chạy lần đầu)
     const ugcCount = await Ugc.count();
     if (ugcCount === 0) {
       await Ugc.bulkCreate([
@@ -97,15 +101,19 @@ async function startServer() {
           status: 'approved'
         }
       ]);
-      console.log('Đã seed 5 bài UGC mẫu');
+      console.log('Đã tạo 5 bài UGC mẫu');
+    } else {
+      console.log(`Đã có ${ugcCount} bài UGC, bỏ qua seed`);
     }
 
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server chạy tại: https://test4-7cop.onrender.com`);
       console.log(`API UGC: https://test4-7cop.onrender.com/api/ugc/pending`);
     });
+
   } catch (error) {
     console.error('Lỗi khởi động server:', error);
+    process.exit(1);
   }
 }
 
