@@ -1,5 +1,7 @@
+// src/models/Event.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+
 const Event = sequelize.define('Event', {
   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
   name: { type: DataTypes.STRING, allowNull: false },
@@ -17,4 +19,5 @@ const Event = sequelize.define('Event', {
   },
   channels: { type: DataTypes.JSON, defaultValue: ['web'] }
 }, { timestamps: true });
+
 module.exports = Event;
