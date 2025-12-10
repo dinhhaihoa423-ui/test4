@@ -61,7 +61,7 @@ if (ugcCount === 0 || true) { // || true để force reseed 1 lần
       title: 'RECAP CSV 2025',
       author: 'Nguyễn Văn Dương',
       timestamp: '20:00:00 16/12/2025',
-      imageUrl: 'https://scontent.fsgn5-14.fna.fbcdn.net/v/t39.30808-6/596291951_1518183076129404_2296339519766816378_n.jpg?_nc_cat=106&_nc_cb=99be929b-ad57045b&ccb=1-7&_nc_sid=127cfc&_nc_ohc=fKa7AWfoI1cQ7kNvwH-sP5V&_nc_oc=Admt3iZ-Su7W3uaLMCAwzvBW080OPWdABEQPnU_1ZOez6sZg2vv9nuf8ijVpFB-lSyyi-nhJFsO_-6IMrqCEFXkh&_nc_zt=23&_nc_ht=scontent.fsgn5-14.fna&_nc_gid=VF33NjwDD_FQQKS3okjukA&oh=00_AfmsqsvwAtNNlpvAt_0wdxROxB2Sel6kVl72QAbREhxb2Q&oe=693F035D', // ảnh thật, đẹp
+      imageUrl: 'https://i.postimg.cc/h4QN9B0V/recapcsv.jpg', // ảnh thật, đẹp
       status: 'pending'
     },
     {
@@ -108,4 +108,5 @@ if (ugcCount === 0 || true) { // || true để force reseed 1 lần
 }
 
 startServer();
+
 
