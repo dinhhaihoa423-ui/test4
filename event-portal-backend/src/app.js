@@ -21,27 +21,27 @@ app.use(cors({ origin: '*' }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Phục vụ file tĩnh - FIX: Serve /picture từ root repo (thư mục picture ở ../picture)
-app.use('/picture', express.static(path.join(__dirname, '../picture'))); // ← DÒNG QUAN TRỌNG NHẤT
-app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Backup nếu có uploads trong backend
+// Phục vụ file tĩnh - FIX: Serve /picture từ THƯ MỤC BACKEND (không dùng ../)
+app.use('/picture', express.static(path.join(__dirname, 'picture'))); // ← DÒNG QUAN TRỌNG: picture trong backend
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Backup nếu có
 
 // Routes
 app.use('/api/organizations', organizationRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/ugc', ugcRoutes);
 
-// Test page với link ảnh
+// Test page với ảnh
 app.get('/', (req, res) => {
   res.send(`
     <h1>Backend Event Portal + UGC OK!</h1>
-    <p>Test ảnh từ /picture (root): <img src="/picture/recapcsv.jpg" alt="Test" width="200"></p>
+    <p>Test ảnh từ /picture (backend): <img src="/picture/recapcsv.jpg" alt="Test" width="200"></p>
     <p>API UGC: <a href="/api/ugc/pending">/api/ugc/pending</a></p>
   `);
 });
 
 const PORT = process.env.PORT || 5000;
 
-// Start server + FORCE RESEED với /picture
+// Start server + FORCE RESEED với /picture từ backend
 async function startServer() {
   try {
     await sequelize.authenticate();
@@ -50,15 +50,15 @@ async function startServer() {
     await sequelize.sync({ alter: true });
     console.log('✅ Đồng bộ bảng OK');
 
-    // FORCE RESEED UGC - Xóa cũ và tạo mới với /picture từ root
-    console.log('🔄 Force reseed UGC với ảnh từ /picture (root)...');
+    // FORCE RESEED UGC - Xóa cũ và tạo mới với /picture từ backend
+    console.log('🔄 Force reseed UGC với ảnh từ /picture (backend)...');
     await Ugc.destroy({ where: {} }); // Xóa hết cũ (xóa dòng này sau test OK)
     await Ugc.bulkCreate([
       {
         title: 'RECAP CSV 2025',
         author: 'Nguyễn Văn Dương',
         timestamp: '20:00:00 16/12/2025',
-        imageUrl: '/picture/recapcsv.jpg',  // ← ĐÚNG: /picture từ root
+        imageUrl: '/picture/recapcsv.jpg',  // ← ĐÚNG: /picture trong backend
         status: 'pending'
       },
       {
