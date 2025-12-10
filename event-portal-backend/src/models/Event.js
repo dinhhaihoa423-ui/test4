@@ -16,7 +16,7 @@ const Event = sequelize.define('Event', {
     allowNull: false
   },
   date: {
-    type: DataTypes.DATE,
+    type: DataTypes.STRING, // Hoặc DATE nếu dùng date format
     allowNull: false
   },
   location: {
@@ -24,8 +24,8 @@ const Event = sequelize.define('Event', {
     allowNull: false
   },
   imageUrl: {
-    type: DataTypes.TEXT, // Cho URL ảnh dài
-    allowNull: true // Optional
+    type: DataTypes.TEXT, // Cho link online dài
+    allowNull: true
   },
   status: {
     type: DataTypes.ENUM('pending', 'approved', 'rejected', 'archived'),
