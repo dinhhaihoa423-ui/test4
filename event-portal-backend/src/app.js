@@ -4,7 +4,7 @@ const cors = require('cors');
 const path = require('path');
 const sequelize = require('./config/database');
 
-// Models
+// Models fufiugi
 const Organization = require('./models/Organization');
 const Event = require('./models/Event');
 const Ugc = require('./models/Ugc');
@@ -118,4 +118,5 @@ async function startServer() {
 }
 
 startServer();
+
 
