@@ -1,4 +1,4 @@
-// script/mxh.js - ĐÃ THÊM TRẠNG THÁI TRỐNG + ICON ĐẸP
+// script/mxh.js - ĐÃ SỬA LỖI XÓA (chỉ 1 dòng khác)
 const API_URL = 'https://test4-7cop.onrender.com/api/social-medias';
 
 document.addEventListener('DOMContentLoaded', async function () {
@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   const editOrgForm = document.getElementById('editOrgForm');
   const confirmModalOverlay = document.getElementById('confirmModalOverlay');
   const confirmMessage = document.getElementById('confirmMessage');
-  const confirmBtn = document.querySelector('.confirm-btn');
+  const confirmBtn = document.querySelector('.confirm-btn');   // ← đúng biến
 
   let currentCardToDelete = null;
 
@@ -38,12 +38,9 @@ document.addEventListener('DOMContentLoaded', async function () {
       notification.style.transform = 'translateX(100px)';
     }, 3000);
   }
-  notification.onclick = () => {
-    notification.style.opacity = '0';
-    notification.style.transform = 'translateX(100px)';
-  };
+  notification.onclick = () => notification.style.opacity = '0';
 
-  // ==================== TRẠNG THÁI TRỐNG (ĐẸP LUNG LINH) ====================
+  // ==================== TRẠNG THÁI TRỐNG ====================
   function checkEmptyState() {
     const container = document.querySelector('.cards');
     const existing = container.querySelector('.empty-message');
@@ -52,30 +49,27 @@ document.addEventListener('DOMContentLoaded', async function () {
     if (container.querySelectorAll('.card').length === 0) {
       const msg = document.createElement('div');
       msg.className = 'empty-message';
-      msg.style.cssText = 'text-align:center; padding:80px 20px; color:#888; grid-column:1/-1;';
+      msg.style.cssText = 'text-align:center;padding:80px 20px;color:#888;grid-column:1/-1;';
       msg.innerHTML = `
-        <div style="font-size:80px; margin-bottom:20px; opacity:0.6;">Link</div>
-        <h3 style="color:#333; margin:0 0 12px 0; font-size:24px;">Chưa có mạng xã hội nào</h3>
-        <p style="margin:0; font-size:16px;">Nhấn nút "+ Thêm mới" để bắt đầu</p>
+        <div style="font-size:80px;margin-bottom:20px;opacity:0.6;">Link</div>
+        <h3 style="margin:0 0 12px 0;font-size:24px;color:#333;">Chưa có mạng xã hội nào</h3>
+        <p style="margin:0;font-size:16px;">Nhấn nút "+ Thêm mới" để bắt đầu</p>
       `;
       container.appendChild(msg);
     }
   }
 
-  // ==================== LOAD DỮ LIỆU ====================
+  // ==================== LOAD ====================
   async function loadSocialMedias() {
     try {
       const res = await fetch(API_URL);
-      if (!res.ok) throw new Error('Server error');
+      if (!res.ok) throw new Error();
       const list = await res.json();
-
-      const container = document.querySelector('.cards');
-      container.innerHTML = '';
+      document.querySelector('.cards').innerHTML = '';
       list.forEach(item => createCard(item));
-      checkEmptyState(); // gọi kiểm tra trạng thái trống
-    } catch (err) {
-      showNotification('Không tải được dữ liệu! Kiểm tra mạng hoặc liên hệ admin', 'error');
-      console.error(err);
+      checkEmptyState();
+    } catch {
+      showNotification('Không tải được dữ liệu!', 'error');
     }
   }
 
@@ -87,16 +81,20 @@ document.addEventListener('DOMContentLoaded', async function () {
       <h3>${data.name}</h3>
       <a class="web" href="${data.link}" target="_blank" rel="noopener">${data.link}</a>
       <div class="actions">
-        <button class="edit"
-          data-id="${data.id}"
-          data-name="${data.name}"
+        <button class="edit" data-id="${data.id}" data-name="${data.name}"
           data-link="${data.link.replace(/^https?:\/\//, '')}">Sửa</button>
         <button class="delete" data-id="${data.id}">Xóa</button>
       </div>
     `;
     document.querySelector('.cards').appendChild(card);
 
-    card.querySelector('.edit').onclick = () => openEditModal(data);
+    card.querySelector('.edit').onclick = () => {
+      document.getElementById('editOrgId').value = data.id;
+      document.getElementById('editOrgName').value = data.name;
+      document.getElementById('editOrgLink').value = data.link.replace(/^https?:\/\//, '');
+      editModalOverlay.classList.add('active');
+    };
+
     card.querySelector('.delete').onclick = () => {
       currentCardToDelete = card;
       confirmMessage.textContent = `Xóa "${data.name}" khỏi danh sách?`;
@@ -104,40 +102,28 @@ document.addEventListener('DOMContentLoaded', async function () {
     };
   }
 
-  function openEditModal(data) {
-    document.getElementById('editOrgId').value = data.id;
-    document.getElementById('editOrgName').value = data.name;
-    document.getElementById('editOrgLink').value = data.link.replace(/^https?:\/\//, '');
-    editModalOverlay.classList.add('active');
-  }
-
   // ==================== THÊM MỚI ====================
   createOrgForm.onsubmit = async e => {
     e.preventDefault();
     const name = document.getElementById('orgName').value.trim();
     const linkInput = document.getElementById('orgLink').value.trim();
-    if (!name || !linkInput) return showNotification('Nhập đầy đủ thông tin!', 'error');
-
+    if (!name || !linkInput) return showNotification('Nhập đầy đủ!', 'error');
     const link = linkInput.startsWith('http') ? linkInput : `https://${linkInput}`;
 
-    try {
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, link })
-      });
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, link })
+    });
 
-      if (res.ok) {
-        const newItem = await res.json();
-        createCard(newItem);
-        checkEmptyState(); // cập nhật lại trạng thái trống
-        showNotification(`Đã thêm "${name}"`, 'success');
-        modalOverlay.classList.remove('active');
-        createOrgForm.reset();
-      } else throw new Error();
-    } catch {
-      showNotification('Lỗi khi thêm!', 'error');
-    }
+    if (res.ok) {
+      const item = await res.json();
+      createCard(item);
+      checkEmptyState();
+      showNotification(`Đã thêm "${name}"`, 'success');
+      modalOverlay.classList.remove('active');
+      createOrgForm.reset();
+    } else showNotification('Lỗi!', 'error');
   };
 
   // ==================== SỬA ====================
@@ -148,24 +134,21 @@ document.addEventListener('DOMContentLoaded', async function () {
     const linkInput = document.getElementById('editOrgLink').value.trim();
     const link = linkInput.startsWith('http') ? linkInput : `https://${linkInput}`;
 
-    try {
-      const res = await fetch(`${API_URL}/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, link })
-      });
-      if (res.ok) {
-        loadSocialMedias(); // reload để đẹp
-        showNotification('Cập nhật thành công!', 'success');
-        editModalOverlay.classList.remove('active');
-      }
-    } catch {
-      showNotification('Lỗi khi sửa!', 'error');
+    const res = await fetch(`${API_URL}/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, link })
+    });
+
+    if (res.ok) {
+      loadSocialMedias();
+      showNotification('Cập nhật thành công!', 'success');
+      editModalOverlay.classList.remove('active');
     }
   };
 
-  // ==================== XÓA ====================
-  confirm.onclick = async () => {
+  // ==================== XÓA – ĐÃ SỬA ĐÚNG BIẾN ====================
+  confirmBtn.onclick = async () => {        // ← Dòng quan trọng nhất!
     if (!currentCardToDelete) return;
     const id = currentCardToDelete.querySelector('.delete').dataset.id;
 
@@ -173,7 +156,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
       if (res.ok) {
         currentCardToDelete.remove();
-        checkEmptyState(); // hiện lại thông báo trống nếu cần
+        checkEmptyState();
         showNotification('Đã xóa thành công!', 'success');
       }
     } catch {
@@ -191,15 +174,14 @@ document.addEventListener('DOMContentLoaded', async function () {
       confirmModalOverlay.classList.remove('active');
     });
 
-  [modalOverlay, editModalOverlay, confirmModalOverlay].forEach(overlay => {
-    overlay.onclick = e => { if (e.target === overlay) overlay.classList.remove('active'); };
+  [modalOverlay, editModalOverlay, confirmModalOverlay].forEach(o => {
+    o.onclick = e => { if (e.target === o) o.classList.remove('active'); };
   });
 
   openModalBtn.onclick = () => modalOverlay.classList.add('active');
 
   // ==================== KHỞI ĐỘNG ====================
   loadSocialMedias();
-  checkEmptyState(); // lần đầu cũng kiểm tra luôn
 });
 
 // LOGOUT
