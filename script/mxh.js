@@ -1,4 +1,4 @@
-// script/mxh.js - CHỈ SỬA 1 DÒNG API_URL LÀ CHẠY NGON NGAY
+// script/mxh.js - ĐÃ THÊM TRẠNG THÁI TRỐNG + ICON ĐẸP
 const API_URL = 'https://test4-7cop.onrender.com/api/social-medias';
 
 document.addEventListener('DOMContentLoaded', async function () {
@@ -43,20 +43,38 @@ document.addEventListener('DOMContentLoaded', async function () {
     notification.style.transform = 'translateX(100px)';
   };
 
-  // ==================== LOAD TỪ DATABASE ====================
+  // ==================== TRẠNG THÁI TRỐNG (ĐẸP LUNG LINH) ====================
+  function checkEmptyState() {
+    const container = document.querySelector('.cards');
+    const existing = container.querySelector('.empty-message');
+    if (existing) existing.remove();
+
+    if (container.querySelectorAll('.card').length === 0) {
+      const msg = document.createElement('div');
+      msg.className = 'empty-message';
+      msg.style.cssText = 'text-align:center; padding:80px 20px; color:#888; grid-column:1/-1;';
+      msg.innerHTML = `
+        <div style="font-size:80px; margin-bottom:20px; opacity:0.6;">Link</div>
+        <h3 style="color:#333; margin:0 0 12px 0; font-size:24px;">Chưa có mạng xã hội nào</h3>
+        <p style="margin:0; font-size:16px;">Nhấn nút "+ Thêm mới" để bắt đầu</p>
+      `;
+      container.appendChild(msg);
+    }
+  }
+
+  // ==================== LOAD DỮ LIỆU ====================
   async function loadSocialMedias() {
     try {
       const res = await fetch(API_URL);
-      if (!res.ok) throw new Error('Lỗi server');
+      if (!res.ok) throw new Error('Server error');
       const list = await res.json();
+
       const container = document.querySelector('.cards');
       container.innerHTML = '';
       list.forEach(item => createCard(item));
-      if (list.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#666; grid-column:1/-1;">Chưa có mạng xã hội nào. Hãy thêm mới!</p>';
-      }
+      checkEmptyState(); // gọi kiểm tra trạng thái trống
     } catch (err) {
-      showNotification('Không tải được dữ liệu! Kiểm tra console (F12)', 'error');
+      showNotification('Không tải được dữ liệu! Kiểm tra mạng hoặc liên hệ admin', 'error');
       console.error(err);
     }
   }
@@ -67,7 +85,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     card.className = 'card';
     card.innerHTML = `
       <h3>${data.name}</h3>
-      <a class="web" href="${data.link}" target="_blank">${data.link}</a>
+      <a class="web" href="${data.link}" target="_blank" rel="noopener">${data.link}</a>
       <div class="actions">
         <button class="edit"
           data-id="${data.id}"
@@ -112,13 +130,12 @@ document.addEventListener('DOMContentLoaded', async function () {
       if (res.ok) {
         const newItem = await res.json();
         createCard(newItem);
+        checkEmptyState(); // cập nhật lại trạng thái trống
         showNotification(`Đã thêm "${name}"`, 'success');
         modalOverlay.classList.remove('active');
         createOrgForm.reset();
-      } else {
-        throw new Error('Lỗi server');
-      }
-    } catch (err) {
+      } else throw new Error();
+    } catch {
       showNotification('Lỗi khi thêm!', 'error');
     }
   };
@@ -131,25 +148,24 @@ document.addEventListener('DOMContentLoaded', async function () {
     const linkInput = document.getElementById('editOrgLink').value.trim();
     const link = linkInput.startsWith('http') ? linkInput : `https://${linkInput}`;
 
-    fetch(`${API_URL}/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, link })
-    })
-    .then(res => {
-      if (res.ok) return res.json();
-      throw new Error();
-    })
-    .then(() => {
-      loadSocialMedias();
-      showNotification('Cập nhật thành công!', 'success');
-      editModalOverlay.classList.remove('active');
-    })
-    .catch(() => showNotification('Lỗi khi sửa!', 'error'));
+    try {
+      const res = await fetch(`${API_URL}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, link })
+      });
+      if (res.ok) {
+        loadSocialMedias(); // reload để đẹp
+        showNotification('Cập nhật thành công!', 'success');
+        editModalOverlay.classList.remove('active');
+      }
+    } catch {
+      showNotification('Lỗi khi sửa!', 'error');
+    }
   };
 
   // ==================== XÓA ====================
-  confirmBtn.onclick = async () => {
+  confirm.onclick = async () => {
     if (!currentCardToDelete) return;
     const id = currentCardToDelete.querySelector('.delete').dataset.id;
 
@@ -157,6 +173,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
       if (res.ok) {
         currentCardToDelete.remove();
+        checkEmptyState(); // hiện lại thông báo trống nếu cần
         showNotification('Đã xóa thành công!', 'success');
       }
     } catch {
@@ -182,6 +199,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   // ==================== KHỞI ĐỘNG ====================
   loadSocialMedias();
+  checkEmptyState(); // lần đầu cũng kiểm tra luôn
 });
 
 // LOGOUT
