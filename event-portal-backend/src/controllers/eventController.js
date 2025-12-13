@@ -21,7 +21,7 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage });
 
-// GET all + populate organization
+// GET all events + populate organization name
 exports.getAll = async (req, res) => {
   try {
     const events = await Event.findAll({
@@ -30,20 +30,36 @@ exports.getAll = async (req, res) => {
     });
     res.json(events);
   } catch (err) {
+    console.error('Lỗi getAll events:', err);
     res.status(500).json({ error: err.message });
   }
 };
 
-// CREATE - FIX organizationId rỗng
+// CREATE event
 exports.create = [
   upload.single('image'),
   async (req, res) => {
     try {
-      const { name, description, startTime, endTime, registrationDeadline, location, registrationLink, organizationId, channels } = req.body;
+      const {
+        name,
+        description,
+        startTime,
+        endTime,
+        registrationDeadline,
+        location,
+        registrationLink,
+        organizationId,
+        channels
+      } = req.body;
+
       const image = req.file ? req.file.path : null;
 
-      // FIX: Chuyển organizationId rỗng hoặc "-----" thành null
-      const orgId = organizationId && organizationId.trim() !== '' && organizationId !== '-----' ? parseInt(organizationId, 10) : null;
+      // FIX: Xử lý organizationId rỗng hoặc "-----" → null
+      let orgId = null;
+      if (organizationId && organizationId.trim() !== '' && organizationId !== '-----') {
+        orgId = parseInt(organizationId, 10);
+        if (isNaN(orgId)) orgId = null;
+      }
 
       const event = await Event.create({
         name,
@@ -61,6 +77,7 @@ exports.create = [
       const result = await Event.findByPk(event.id, {
         include: [{ model: Organization, attributes: ['name'] }]
       });
+
       res.status(201).json(result);
     } catch (err) {
       console.error('Lỗi tạo event:', err);
@@ -69,19 +86,34 @@ exports.create = [
   }
 ];
 
-// UPDATE - FIX organizationId rỗng
+// UPDATE event
 exports.update = [
   upload.single('image'),
   async (req, res) => {
     try {
       const event = await Event.findByPk(req.params.id);
-      if (!event) return res.status(404).json({ error: 'Không tìm thấy' });
+      if (!event) return res.status(404).json({ error: 'Không tìm thấy sự kiện' });
 
-      const { name, description, startTime, endTime, registrationDeadline, location, registrationLink, organizationId, channels } = req.body;
+      const {
+        name,
+        description,
+        startTime,
+        endTime,
+        registrationDeadline,
+        location,
+        registrationLink,
+        organizationId,
+        channels
+      } = req.body;
+
       const image = req.file ? req.file.path : event.image;
 
-      // FIX: Chuyển organizationId rỗng hoặc "-----" thành null
-      const orgId = organizationId && organizationId.trim() !== '' && organizationId !== '-----' ? parseInt(organizationId, 10) : null;
+      // FIX: Xử lý organizationId rỗng hoặc "-----" → null
+      let orgId = null;
+      if (organizationId && organizationId.trim() !== '' && organizationId !== '-----') {
+        orgId = parseInt(organizationId, 10);
+        if (isNaN(orgId)) orgId = null;
+      }
 
       await event.update({
         name,
@@ -99,6 +131,7 @@ exports.update = [
       const updated = await Event.findByPk(event.id, {
         include: [{ model: Organization, attributes: ['name'] }]
       });
+
       res.json(updated);
     } catch (err) {
       console.error('Lỗi update event:', err);
@@ -107,34 +140,41 @@ exports.update = [
   }
 ];
 
-// DELETE
+// DELETE event
 exports.delete = async (req, res) => {
   try {
     const event = await Event.findByPk(req.params.id);
-    if (!event) return res.status(404).json({ error: 'Không tìm thấy' });
+    if (!event) return res.status(404).json({ error: 'Không tìm thấy sự kiện' });
 
+    // Xóa ảnh Cloudinary nếu có
     if (event.image) {
       const publicId = event.image.split('/').slice(-2).join('/').split('.')[0];
       await cloudinary.uploader.destroy(publicId);
     }
 
     await event.destroy();
-    res.json({ message: 'Xóa thành công' });
+    res.json({ message: 'Xóa sự kiện thành công' });
   } catch (err) {
+    console.error('Lỗi delete event:', err);
     res.status(500).json({ error: err.message });
   }
 };
 
-// CHANGE STATUS (duyệt/từ chối)
+// CHANGE STATUS (duyệt / từ chối)
 exports.changeStatus = async (req, res) => {
   try {
     const { status } = req.body; // 'pending' hoặc 'approved'
+    if (!['pending', 'approved'].includes(status)) {
+      return res.status(400).json({ error: 'Trạng thái không hợp lệ' });
+    }
+
     const event = await Event.findByPk(req.params.id);
-    if (!event) return res.status(404).json({ error: 'Không tìm thấy' });
+    if (!event) return res.status(404).json({ error: 'Không tìm thấy sự kiện' });
 
     await event.update({ status });
     res.json({ message: 'Cập nhật trạng thái thành công' });
   } catch (err) {
+    console.error('Lỗi change status:', err);
     res.status(400).json({ error: err.message });
   }
 };
