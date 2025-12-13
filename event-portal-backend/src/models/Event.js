@@ -1,4 +1,3 @@
-// src/models/Event.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const Organization = require('./Organization');
@@ -11,17 +10,29 @@ const Event = sequelize.define('Event', {
   },
   name: { type: DataTypes.STRING, allowNull: false },
   description: { type: DataTypes.TEXT },
-  startTime: { type: DataTypes.DATE, allowNull: false },
-  endTime: { type: DataTypes.DATE, allowNull: false },
-  registrationDeadline: { type: DataTypes.DATE, allowNull: false },
+  startTime: { 
+    type: DataTypes.DATE, 
+    allowNull: true,         // Tạm thời cho phép null để alter thành công
+    defaultValue: null 
+  },
+  endTime: { 
+    type: DataTypes.DATE, 
+    allowNull: true, 
+    defaultValue: null 
+  },
+  registrationDeadline: { 
+    type: DataTypes.DATE, 
+    allowNull: true, 
+    defaultValue: null 
+  },
   location: { type: DataTypes.STRING, allowNull: false },
   registrationLink: { type: DataTypes.STRING, allowNull: false },
-  image: { type: DataTypes.STRING }, // Cloudinary URL
+  image: { type: DataTypes.STRING },
   status: {
     type: DataTypes.ENUM('created', 'pending', 'approved'),
     defaultValue: 'created'
   },
-  channels: { type: DataTypes.JSON, defaultValue: ['web'] }, // ['web', 'facebook', 'zalo']
+  channels: { type: DataTypes.JSON, defaultValue: ['web'] },
   organizationId: {
     type: DataTypes.INTEGER,
     references: { model: Organization, key: 'id' }
