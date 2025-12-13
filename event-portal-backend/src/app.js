@@ -48,19 +48,20 @@ app.get('/', (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-// ==================== KHỞI ĐỘNG SERVER – CÁCH 2: RESET UGC MỖI LẦN DEPLOY ====================
+// ==================== KHỞI ĐỘNG SERVER – FIX SYNC CỘT ====================
 async function startServer() {
   try {
     await sequelize.authenticate();
     console.log('Kết nối PostgreSQL thành công!');
 
-    await sequelize.sync({ force: false });
-    console.log('Đồng bộ bảng thành công!');
+    // FIX CHÍNH: Sử dụng alter: true để tự động thêm cột thiếu (startTime, endTime, registrationDeadline,...)
+    // Không xóa data cũ trong bảng Events
+    await sequelize.sync({ alter: true });
+    console.log('Đồng bộ bảng thành công với alter: true! (Thêm cột thiếu nếu có)');
 
-    // CỨ MỖI LẦN KHỞI ĐỘNG SERVER LÀ XÓA HẾT UGC CŨ + SEED LẠI 5 BÀI MẪU
+    // Giữ nguyên logic reset + seed UGC mỗi lần deploy
     console.log('Đang xóa hết UGC cũ...');
-    await Ugc.destroy({ truncate: true, cascade: true }); // XÓA SẠCH BẢNG
-
+    await Ugc.destroy({ truncate: true, cascade: true });
     console.log('Đang seed lại 5 bài UGC mặc định...');
     await Ugc.bulkCreate([
       {
@@ -103,9 +104,8 @@ async function startServer() {
 
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server chạy tại: https://test4-7cop.onrender.com`);
-      console.log(`Mỗi lần deploy → UGC được reset về 5 bài mặc định`);
+      console.log(`Mỗi lần deploy → UGC reset, Events giữ nguyên và tự động thêm cột thiếu`);
     });
-
   } catch (error) {
     console.error('Lỗi khởi động server:', error);
     app.use((req, res) => res.status(500).json({ error: error.message }));
