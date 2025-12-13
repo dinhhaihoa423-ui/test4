@@ -58,16 +58,7 @@ async function startServer() {
     await sequelize.sync({ force: true });
     console.log('RESET TOÀN BỘ BẢNG THÀNH CÔNG! Tạo mới với đầy đủ cột.');
 
-    // ==================== SEED TỔ CHỨC MẪU (PHẢI CÓ TRƯỚC EVENTS) ====================
-    console.log('Đang seed tổ chức mẫu...');
-    const orgs = await Organization.bulkCreate([
-      { name: 'A\'zone' },
-      { name: 'ITMC' },
-      { name: 'LCDCNDPT' },
-      { name: 'C.MC' },
-      { name: 'CSV' }
-    ], { ignoreDuplicates: true });
-    console.log(`SEED ${orgs.length} TỔ CHỨC THÀNH CÔNG!`);
+
 
     // ==================== SEED UGC ====================
     console.log('Đang xóa hết UGC cũ...');
@@ -195,3 +186,4 @@ async function startServer() {
 }
 
 startServer();
+
