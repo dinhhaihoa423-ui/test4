@@ -1,15 +1,13 @@
 // ==================== KẾT NỐI BACKEND ====================
 const API_BASE = 'https://test4-7cop.onrender.com';
 let organizations = [];
+let allEvents = []; // Cache toàn bộ events để mở modal sửa/xem nhanh, tránh fetch lặp
 
-// Load tổ chức từ backend (thật 100%)
+// Load tổ chức thật từ backend
 async function loadOrganizations() {
     try {
         const res = await fetch(`${API_BASE}/api/organizations`);
-        if (!res.ok) {
-            console.error('Lỗi HTTP khi load tổ chức:', res.status);
-            return;
-        }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         organizations = await res.json();
 
         const selects = [
@@ -28,24 +26,21 @@ async function loadOrganizations() {
             }
         });
     } catch (err) {
-        console.error('Lỗi kết nối load tổ chức:', err);
+        console.error('Lỗi load tổ chức:', err);
     }
 }
 
-// Load events từ backend (không alert nếu rỗng)
+// Load events + cache
 async function loadEvents() {
     try {
         const res = await fetch(`${API_BASE}/api/events`);
-        if (!res.ok) {
-            console.error('Lỗi HTTP khi load events:', res.status);
-            return;
-        }
-        const events = await res.json();
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        allEvents = await res.json();
 
         // Xóa card cũ
         document.querySelectorAll('.event-card').forEach(wrapper => wrapper.innerHTML = '');
 
-        events.forEach(event => {
+        allEvents.forEach(event => {
             let tabId = '';
             if (event.status === 'created') tabId = 'created-content';
             else if (event.status === 'pending') tabId = 'waitapproved-content';
@@ -57,11 +52,11 @@ async function loadEvents() {
         updateTabBadges();
         updateEventStatusBadges();
     } catch (err) {
-        console.error('Lỗi kết nối load events:', err);
+        console.error('Lỗi load events:', err);
     }
 }
 
-// Render card sự kiện từ data thật
+// Render card sự kiện
 function renderEventCard(event, tabId) {
     const wrapper = document.querySelector(`#${tabId} .event-card`);
     if (!wrapper) return;
@@ -158,19 +153,12 @@ async function createEvent() {
     if (fileInput.files[0]) formData.append('image', fileInput.files[0]);
 
     try {
-        const res = await fetch(`${API_BASE}/api/events`, {
-            method: 'POST',
-            body: formData
-        });
-        if (!res.ok) {
-            const errText = await res.text();
-            throw new Error(errText || 'Lỗi server');
-        }
+        const res = await fetch(`${API_BASE}/api/events`, { method: 'POST', body: formData });
+        if (!res.ok) throw new Error(await res.text());
         alert('Tạo sự kiện thành công!');
         closeCreateModal();
         await loadEvents();
     } catch (err) {
-        console.error(err);
         alert('Lỗi tạo sự kiện: ' + err.message);
     }
 }
@@ -190,10 +178,7 @@ async function updateEvent(id) {
     if (fileInput.files[0]) formData.append('image', fileInput.files[0]);
 
     try {
-        const res = await fetch(`${API_BASE}/api/events/${id}`, {
-            method: 'PUT',
-            body: formData
-        });
+        const res = await fetch(`${API_BASE}/api/events/${id}`, { method: 'PUT', body: formData });
         if (!res.ok) throw new Error(await res.text());
         alert('Cập nhật thành công!');
         closeEditModal();
@@ -204,7 +189,7 @@ async function updateEvent(id) {
 }
 
 async function deleteEvent(id) {
-    if (!confirm('Xóa sự kiện này?')) return;
+    if (!confirm('Bạn chắc chắn muốn xóa sự kiện này?')) return;
     try {
         const res = await fetch(`${API_BASE}/api/events/${id}`, { method: 'DELETE' });
         if (!res.ok) throw new Error(await res.text());
@@ -232,74 +217,67 @@ async function approveEvent(id) {
 }
 
 async function rejectEvent(id) {
-    if (!confirm('Từ chối và xóa sự kiện?')) return;
+    if (!confirm('Từ chối và xóa sự kiện này?')) return;
     await deleteEvent(id);
     closeViewModal();
 }
 
-async function openEditModal(id) {
-    try {
-        const res = await fetch(`${API_BASE}/api/events`);
-        if (!res.ok) throw new Error('Server lỗi');
-        const events = await res.json();
-        const event = events.find(e => e.id == id);
-        if (!event) throw new Error('Không tìm thấy');
-
-        document.getElementById('editEventId').value = event.id;
-        document.getElementById('editEventName').value = event.name;
-        document.getElementById('editEventDescription').value = event.description || '';
-        document.getElementById('editEventStartTime').value = event.startTime.slice(0,16);
-        document.getElementById('editEventEndTime').value = event.endTime.slice(0,16);
-        document.getElementById('editRegistrationDeadline').value = event.registrationDeadline.slice(0,16);
-        document.getElementById('editEventLocation').value = event.location;
-        document.getElementById('editRegistrationLink').value = event.registrationLink;
-        document.getElementById('editEventOrganization').value = event.organizationId || '';
-
-        document.getElementById('editFileName').textContent = event.image ? 'Ảnh hiện tại đã có' : 'Chưa có ảnh';
-
-        document.getElementById('editModalOverlay').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    } catch (err) {
-        alert('Không load được dữ liệu sửa!');
+// Open modal sửa/xem với cache
+function openEditModal(id) {
+    const event = allEvents.find(e => e.id == id);
+    if (!event) {
+        alert('Không tìm thấy sự kiện để sửa! Thử refresh trang.');
+        return;
     }
+
+    document.getElementById('editEventId').value = event.id;
+    document.getElementById('editEventName').value = event.name || '';
+    document.getElementById('editEventDescription').value = event.description || '';
+    document.getElementById('editEventStartTime').value = event.startTime ? event.startTime.slice(0,16) : '';
+    document.getElementById('editEventEndTime').value = event.endTime ? event.endTime.slice(0,16) : '';
+    document.getElementById('editRegistrationDeadline').value = event.registrationDeadline ? event.registrationDeadline.slice(0,16) : '';
+    document.getElementById('editEventLocation').value = event.location || '';
+    document.getElementById('editRegistrationLink').value = event.registrationLink || '';
+    document.getElementById('editEventOrganization').value = event.organizationId || '';
+
+    document.getElementById('editFileName').textContent = event.image ? 'Ảnh hiện tại đã có' : 'Chưa có ảnh nào được chọn';
+
+    document.getElementById('editModalOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
 
-async function openViewModal(id) {
-    try {
-        const res = await fetch(`${API_BASE}/api/events`);
-        if (!res.ok) throw new Error('Server lỗi');
-        const events = await res.json();
-        const event = events.find(e => e.id == id);
-        if (!event) throw new Error('Không tìm thấy');
-
-        document.getElementById('viewEventImage').src = event.image || 'https://via.placeholder.com/400x250';
-        document.getElementById('viewEventName').textContent = event.name;
-        document.getElementById('viewEventDescription').textContent = event.description || 'Chưa có mô tả';
-        document.getElementById('viewEventStartTime').textContent = new Date(event.startTime).toLocaleString('vi-VN');
-        document.getElementById('viewEventEndTime').textContent = new Date(event.endTime).toLocaleString('vi-VN');
-        document.getElementById('viewRegistrationDeadline').textContent = new Date(event.registrationDeadline).toLocaleString('vi-VN');
-        document.getElementById('viewEventLocation').textContent = event.location;
-        document.getElementById('viewEventOrganization').textContent = event.Organization?.name || '-----';
-        document.getElementById('viewRegistrationLink').href = event.registrationLink;
-        document.getElementById('viewRegistrationLink').textContent = event.registrationLink;
-
-        const channelsContainer = document.getElementById('viewSocialChannels');
-        channelsContainer.innerHTML = '';
-        (event.channels || ['web']).forEach(ch => {
-            const tag = document.createElement('span');
-            tag.className = 'channel-tag';
-            tag.textContent = ch.charAt(0).toUpperCase() + ch.slice(1);
-            channelsContainer.appendChild(tag);
-        });
-
-        document.getElementById('approveEventBtn').onclick = () => approveEvent(event.id);
-        document.getElementById('rejectEventBtn').onclick = () => rejectEvent(event.id);
-
-        document.getElementById('viewModalOverlay').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    } catch (err) {
-        alert('Không load được chi tiết!');
+function openViewModal(id) {
+    const event = allEvents.find(e => e.id == id);
+    if (!event) {
+        alert('Không tìm thấy sự kiện để xem! Thử refresh trang.');
+        return;
     }
+
+    document.getElementById('viewEventImage').src = event.image || 'https://via.placeholder.com/400x250';
+    document.getElementById('viewEventName').textContent = event.name || 'Chưa có tên';
+    document.getElementById('viewEventDescription').textContent = event.description || 'Chưa có mô tả';
+    document.getElementById('viewEventStartTime').textContent = event.startTime ? new Date(event.startTime).toLocaleString('vi-VN') : 'Chưa xác định';
+    document.getElementById('viewEventEndTime').textContent = event.endTime ? new Date(event.endTime).toLocaleString('vi-VN') : 'Chưa xác định';
+    document.getElementById('viewRegistrationDeadline').textContent = event.registrationDeadline ? new Date(event.registrationDeadline).toLocaleString('vi-VN') : 'Chưa xác định';
+    document.getElementById('viewEventLocation').textContent = event.location || 'Chưa xác định';
+    document.getElementById('viewEventOrganization').textContent = event.Organization?.name || '-----';
+    document.getElementById('viewRegistrationLink').href = event.registrationLink || '#';
+    document.getElementById('viewRegistrationLink').textContent = event.registrationLink || 'Chưa có link';
+
+    const channelsContainer = document.getElementById('viewSocialChannels');
+    channelsContainer.innerHTML = '';
+    (event.channels || ['web']).forEach(ch => {
+        const tag = document.createElement('span');
+        tag.className = 'channel-tag';
+        tag.textContent = ch.charAt(0).toUpperCase() + ch.slice(1);
+        channelsContainer.appendChild(tag);
+    });
+
+    document.getElementById('approveEventBtn').onclick = () => approveEvent(event.id);
+    document.getElementById('rejectEventBtn').onclick = () => rejectEvent(event.id);
+
+    document.getElementById('viewModalOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
 
 // Close modal
@@ -325,7 +303,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadOrganizations();
     await loadEvents();
 
-    // Tab
+    // Tab switching
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -370,7 +348,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.getElementById('createEvent').addEventListener('click', createEvent);
 
-    // Modal sửa & xem
+    // Modal sửa
     document.getElementById('closeEditModalBtn').addEventListener('click', closeEditModal);
     document.getElementById('cancelEditBtn').addEventListener('click', closeEditModal);
     document.getElementById('editModalOverlay').addEventListener('click', e => {
@@ -387,13 +365,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateEvent(document.getElementById('editEventId').value);
     });
 
+    // Modal xem
     document.getElementById('closeViewModalBtn').addEventListener('click', closeViewModal);
     document.getElementById('closeViewBtn').addEventListener('click', closeViewModal);
     document.getElementById('viewModalOverlay').addEventListener('click', e => {
         if (e.target === document.getElementById('viewModalOverlay')) closeViewModal();
     });
 
-    // Delegate nút
+    // Delegate nút động
     document.body.addEventListener('click', e => {
         const editBtn = e.target.closest('.edit-event-btn');
         if (editBtn) openEditModal(editBtn.dataset.id);
