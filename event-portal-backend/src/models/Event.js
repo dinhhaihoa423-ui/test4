@@ -10,21 +10,12 @@ const Event = sequelize.define('Event', {
   },
   name: { type: DataTypes.STRING, allowNull: false },
   description: { type: DataTypes.TEXT },
-  startTime: { 
-    type: DataTypes.DATE, 
-    allowNull: true   // ← TẠM THỜI CHO PHÉP NULL ĐỂ SYNC THÀNH CÔNG
-  },
-  endTime: { 
-    type: DataTypes.DATE, 
-    allowNull: true 
-  },
-  registrationDeadline: { 
-    type: DataTypes.DATE, 
-    allowNull: true 
-  },
-  location: { type: DataTypes.STRING, allowNull: false },
-  registrationLink: { type: DataTypes.STRING, allowNull: false },
-  image: { type: DataTypes.STRING },
+  startTime: { type: DataTypes.DATE, allowNull: false },
+  endTime: { type: DataTypes.DATE, allowNull: false },
+  registrationDeadline: { type: DataTypes.DATE, allowNull: false },
+  location: { type: DataTypes.TEXT, allowNull: false }, // ← TEXT thay STRING
+  registrationLink: { type: DataTypes.TEXT, allowNull: false }, // ← TEXT
+  image: { type: DataTypes.TEXT }, // ← TEXT để chứa URL dài
   status: {
     type: DataTypes.ENUM('created', 'pending', 'approved'),
     defaultValue: 'created'
