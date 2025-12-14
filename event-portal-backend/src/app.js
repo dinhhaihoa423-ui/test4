@@ -116,8 +116,72 @@ async function startServer() {
     app.listen(PORT, '0.0.0.0', () => console.log('Server chạy ở chế độ lỗi'));
   }
 }
+// ==================== API CHO TRANG THỐNG KÊ ====================
+app.get('/api/stats', async (req, res) => {
+  try {
+    // 1. Tổng sự kiện: tất cả sự kiện (created + pending + approved)
+    const totalEvents = await Event.count();
 
+    // 2. Sự kiện mới (chờ duyệt): status = 'pending'
+    const pendingEvents = await Event.count({ where: { status: 'pending' } });
+
+    // 3. Nội dung chờ duyệt: UGC status = 'pending'
+    const pendingUgc = await Ugc.count({ where: { status: 'pending' } });
+
+    // 4. Phân bố theo tổ chức (pie chart): đếm số sự kiện mỗi tổ chức
+    const orgDistribution = await Event.findAll({
+      attributes: [
+        'organizationId',
+        [sequelize.fn('COUNT', sequelize.col('id')), 'eventCount']
+      ],
+      include: [{
+        model: Organization,
+        attributes: ['name']
+      }],
+      group: ['organizationId', 'Organization.id'],
+      raw: true
+    });
+
+    const pieData = orgDistribution.map(row => ({
+      label: row['Organization.name'] || 'Chưa xác định',
+      value: parseInt(row.eventCount)
+    }));
+
+    // 5. Biểu đồ sự kiện theo tháng (bar chart)
+    // Lấy năm hiện tại để nhóm (có thể thay đổi nếu cần nhiều năm)
+    const currentYear = new Date().getFullYear();
+
+    const monthlyEvents = await Event.findAll({
+      attributes: [
+        [sequelize.fn('MONTH', sequelize.col('startTime')), 'month'],
+        [sequelize.fn('COUNT', sequelize.col('id')), 'count']
+      ],
+      where: sequelize.where(sequelize.fn('YEAR', sequelize.col('startTime')), currentYear),
+      group: [sequelize.fn('MONTH', sequelize.col('startTime'))],
+      raw: true
+    });
+
+    // Tạo mảng 12 tháng đầy đủ (0-11)
+    const monthlyData = Array(12).fill(0);
+    monthlyEvents.forEach(row => {
+      const monthIndex = parseInt(row.month) - 1; // MONTH() trả về 1-12
+      monthlyData[monthIndex] = parseInt(row.count);
+    });
+
+    res.json({
+      totalEvents,
+      pendingEvents,
+      pendingUgc,
+      pieData,          // [{label: 'Azone', value: 1}, {label: 'LCCDCNPT', value: 3}, ...]
+      monthlyData       // [0,0,2,0,0,1,0,1,0,0,0,0]
+    });
+  } catch (error) {
+    console.error('Lỗi lấy stats:', error);
+    res.status(500).json({ error: 'Không thể lấy dữ liệu thống kê' });
+  }
+});
 startServer();
+
 
 
 
