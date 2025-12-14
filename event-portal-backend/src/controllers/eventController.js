@@ -1,4 +1,3 @@
-// src/controllers/eventController.js
 const Event = require('../models/Event');
 const Organization = require('../models/Organization');
 const { v2: cloudinary } = require('cloudinary');
@@ -21,44 +20,35 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage });
 
-// GET all events + populate organization name
+// GET all
 exports.getAll = async (req, res) => {
   try {
     const events = await Event.findAll({
-      include: [{ model: Organization, attributes: ['id', 'name'] }],
+      include: [{ model: Organization, attributes: ['name'] }],
       order: [['createdAt', 'DESC']]
     });
     res.json(events);
   } catch (err) {
-    console.error('Lỗi getAll events:', err);
     res.status(500).json({ error: err.message });
   }
 };
 
-// CREATE event
+// CREATE
 exports.create = [
   upload.single('image'),
   async (req, res) => {
     try {
-      const {
-        name,
-        description,
-        startTime,
-        endTime,
-        registrationDeadline,
-        location,
-        registrationLink,
-        organizationId,
-        channels
-      } = req.body;
-
+      const { name, description, startTime, endTime, registrationDeadline, location, registrationLink, organizationId, channels } = req.body;
       const image = req.file ? req.file.path : null;
 
-      // FIX: Xử lý organizationId rỗng hoặc "-----" → null
       let orgId = null;
+      let orgName = null;
       if (organizationId && organizationId.trim() !== '' && organizationId !== '-----') {
         orgId = parseInt(organizationId, 10);
-        if (isNaN(orgId)) orgId = null;
+        if (!isNaN(orgId)) {
+          const org = await Organization.findByPk(orgId);
+          orgName = org ? org.name : null;
+        }
       }
 
       const event = await Event.create({
@@ -71,13 +61,13 @@ exports.create = [
         registrationLink,
         image,
         organizationId: orgId,
+        organizationName: orgName, // Lưu tên ngay lúc tạo
         channels: channels ? JSON.parse(channels) : ['web']
       });
 
       const result = await Event.findByPk(event.id, {
         include: [{ model: Organization, attributes: ['name'] }]
       });
-
       res.status(201).json(result);
     } catch (err) {
       console.error('Lỗi tạo event:', err);
@@ -86,33 +76,25 @@ exports.create = [
   }
 ];
 
-// UPDATE event
+// UPDATE
 exports.update = [
   upload.single('image'),
   async (req, res) => {
     try {
       const event = await Event.findByPk(req.params.id);
-      if (!event) return res.status(404).json({ error: 'Không tìm thấy sự kiện' });
+      if (!event) return res.status(404).json({ error: 'Không tìm thấy' });
 
-      const {
-        name,
-        description,
-        startTime,
-        endTime,
-        registrationDeadline,
-        location,
-        registrationLink,
-        organizationId,
-        channels
-      } = req.body;
-
+      const { name, description, startTime, endTime, registrationDeadline, location, registrationLink, organizationId, channels } = req.body;
       const image = req.file ? req.file.path : event.image;
 
-      // FIX: Xử lý organizationId rỗng hoặc "-----" → null
       let orgId = null;
+      let orgName = event.organizationName; // Giữ tên cũ nếu không đổi
       if (organizationId && organizationId.trim() !== '' && organizationId !== '-----') {
         orgId = parseInt(organizationId, 10);
-        if (isNaN(orgId)) orgId = null;
+        if (!isNaN(orgId)) {
+          const org = await Organization.findByPk(orgId);
+          orgName = org ? org.name : null;
+        }
       }
 
       await event.update({
@@ -125,13 +107,13 @@ exports.update = [
         registrationLink,
         image,
         organizationId: orgId,
+        organizationName: orgName, // Cập nhật tên mới
         channels: channels ? JSON.parse(channels) : event.channels
       });
 
       const updated = await Event.findByPk(event.id, {
         include: [{ model: Organization, attributes: ['name'] }]
       });
-
       res.json(updated);
     } catch (err) {
       console.error('Lỗi update event:', err);
@@ -178,3 +160,4 @@ exports.changeStatus = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
