@@ -149,22 +149,23 @@ app.get('/api/stats', async (req, res) => {
     }
 
     // Bar chart - theo tháng
-    const monthlyEvents = await Event.findAll({
-      attributes: [
-        [sequelize.fn('MONTH', sequelize.col('Event.startTime')), 'month'],
-        [sequelize.fn('COUNT', sequelize.col('Event.id')), 'count']
-      ],
-      group: [sequelize.fn('MONTH', sequelize.col('Event.startTime'))],
-      raw: true
-    });
+    // Biểu đồ sự kiện theo tháng (sử dụng EXTRACT - chuẩn PostgreSQL)
+const monthlyEvents = await Event.findAll({
+  attributes: [
+    [sequelize.fn('EXTRACT', sequelize.literal('MONTH FROM "Event"."startTime"')), 'month'],
+    [sequelize.fn('COUNT', sequelize.col('Event.id')), 'count']
+  ],
+  group: [sequelize.fn('EXTRACT', sequelize.literal('MONTH FROM "Event"."startTime"'))],
+  raw: true
+});
 
-    const monthlyData = Array(12).fill(0);
-    monthlyEvents.forEach(row => {
-      const monthIndex = parseInt(row.month) - 1;
-      if (monthIndex >= 0 && monthIndex < 12) {
-        monthlyData[monthIndex] += parseInt(row.count);
-      }
-    });
+const monthlyData = Array(12).fill(0);
+monthlyEvents.forEach(row => {
+  const monthIndex = parseInt(row.month) - 1;
+  if (monthIndex >= 0 && monthIndex < 12) {
+    monthlyData[monthIndex] += parseInt(row.count);
+  }
+});
 
     res.json({
       totalEvents,
@@ -179,6 +180,7 @@ app.get('/api/stats', async (req, res) => {
   }
 });
 startServer();
+
 
 
 
