@@ -419,3 +419,8 @@ function searchEvents(term) {
   });
 }
 
+// LOGOUT
+document.querySelector('.logout-btn')?.addEventListener('click', () => {
+  localStorage.clear();
+  window.location.href = 'index.html';
+});
