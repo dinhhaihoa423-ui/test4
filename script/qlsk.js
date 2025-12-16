@@ -9,7 +9,6 @@ async function loadOrganizations() {
     const res = await fetch(`${API_BASE}/api/organizations`);
     if (!res.ok) throw new Error('Server lỗi');
     organizations = await res.json();
-
     const selects = [
       document.getElementById('eventOrganization'),
       document.getElementById('editEventOrganization')
@@ -36,10 +35,8 @@ async function loadEvents() {
     const res = await fetch(`${API_BASE}/api/events`);
     if (!res.ok) throw new Error('Server lỗi');
     allEvents = await res.json();
-
     // Xóa card cũ
     document.querySelectorAll('.event-card').forEach(wrapper => wrapper.innerHTML = '');
-
     allEvents.forEach(event => {
       let tabId = '';
       if (event.status === 'created') tabId = 'created-content';
@@ -47,7 +44,6 @@ async function loadEvents() {
       else if (event.status === 'approved') tabId = 'approved-content';
       if (tabId) renderEventCard(event, tabId);
     });
-
     updateTabBadges();
     updateEventStatusBadges();
   } catch (err) {
@@ -56,23 +52,19 @@ async function loadEvents() {
   }
 }
 
-// Render card từ data thật
+// Render card từ data thật – FIX: Ưu tiên organizationName
 function renderEventCard(event, tabId) {
   const wrapper = document.querySelector(`#${tabId} .event-card`);
   if (!wrapper) return;
-
   const card = document.createElement('div');
   card.className = 'content-card';
   card.dataset.id = event.id;
-
   const formatDate = (iso) => {
     if (!iso) return 'Chưa xác định';
     const d = new Date(iso);
     return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
   };
-
-  const orgName = event.organizationName || event.Organization?.name || '-----';
-
+  const orgName = event.organizationName || event.Organization?.name || '-----'; // FIX: ưu tiên tên lưu sẵn
   const channelsHtml = event.channels?.length > 0
     ? `<div class="displaymxh">
         ${event.channels.includes('web') ? '<div class="mxh"><div class="mxh-web">Web</div></div>' : ''}
@@ -80,7 +72,6 @@ function renderEventCard(event, tabId) {
         ${event.channels.includes('zalo') ? '<div class="zalo"><div class="zalo-content">Zalo</div></div>' : ''}
        </div>`
     : '<div class="mxh"><div class="mxh-web">Web</div></div>';
-
   let buttonsHtml = '';
   if (event.status === 'created') {
     buttonsHtml = `
@@ -93,7 +84,6 @@ function renderEventCard(event, tabId) {
   } else if (event.status === 'approved') {
     buttonsHtml = `<div class="button-container"><button class="delete-btn" data-id="${event.id}">Xóa</button></div>`;
   }
-
   card.innerHTML = `
     <div class="content-image">
       <img src="${event.image || 'https://via.placeholder.com/400x250/f0f0f0/999?text=No+Image'}" alt="${event.name}">
@@ -112,7 +102,6 @@ function renderEventCard(event, tabId) {
       ${buttonsHtml}
     </div>
   `;
-
   wrapper.appendChild(card);
 }
 
@@ -127,13 +116,10 @@ async function createEvent() {
   formData.append('location', document.getElementById('eventLocation').value.trim());
   formData.append('registrationLink', document.getElementById('registrationLink').value.trim());
   formData.append('organizationId', document.getElementById('eventOrganization').value || null);
-
   const channels = Array.from(document.querySelectorAll('input[name="socialChannels"]:checked')).map(cb => cb.value);
   formData.append('channels', JSON.stringify(channels));
-
   const file = document.getElementById('eventImage').files[0];
   if (file) formData.append('image', file);
-
   try {
     const res = await fetch(`${API_BASE}/api/events`, { method: 'POST', body: formData });
     if (!res.ok) throw new Error(await res.text());
@@ -211,7 +197,6 @@ function openEditModal(id) {
     alert('Không tìm thấy sự kiện để sửa!');
     return;
   }
-
   document.getElementById('editEventId').value = event.id;
   document.getElementById('editEventName').value = event.name;
   document.getElementById('editEventDescription').value = event.description || '';
@@ -221,7 +206,6 @@ function openEditModal(id) {
   document.getElementById('editEventLocation').value = event.location;
   document.getElementById('editRegistrationLink').value = event.registrationLink;
   document.getElementById('editEventOrganization').value = event.organizationId || '';
-
   document.getElementById('editModalOverlay').classList.add('active');
   document.body.style.overflow = 'hidden';
 }
@@ -232,7 +216,6 @@ function openViewModal(id) {
     alert('Không tìm thấy sự kiện để xem!');
     return;
   }
-
   document.getElementById('viewEventImage').src = event.image || '';
   document.getElementById('viewEventName').textContent = event.name;
   document.getElementById('viewEventDescription').textContent = event.description || 'Chưa có mô tả';
@@ -240,10 +223,9 @@ function openViewModal(id) {
   document.getElementById('viewEventEndTime').textContent = new Date(event.endTime).toLocaleString('vi-VN');
   document.getElementById('viewRegistrationDeadline').textContent = new Date(event.registrationDeadline).toLocaleString('vi-VN');
   document.getElementById('viewEventLocation').textContent = event.location;
-  document.getElementById('viewEventOrganization').textContent = event.organizationName || event.Organization?.name || '-----';
+  document.getElementById('viewEventOrganization').textContent = event.organizationName || event.Organization?.name || '-----'; // FIX: ưu tiên organizationName
   document.getElementById('viewRegistrationLink').href = event.registrationLink;
   document.getElementById('viewRegistrationLink').textContent = event.registrationLink;
-
   const channelsDiv = document.getElementById('viewSocialChannels');
   channelsDiv.innerHTML = '';
   (event.channels || []).forEach(ch => {
@@ -252,10 +234,8 @@ function openViewModal(id) {
     tag.textContent = ch.charAt(0).toUpperCase() + ch.slice(1);
     channelsDiv.appendChild(tag);
   });
-
   document.getElementById('approveEventBtn').onclick = () => approveEvent(event.id);
   document.getElementById('rejectEventBtn').onclick = () => rejectEvent(event.id);
-
   document.getElementById('viewModalOverlay').classList.add('active');
   document.body.style.overflow = 'hidden';
 }
@@ -424,3 +404,4 @@ document.querySelector('.logout-btn')?.addEventListener('click', () => {
   localStorage.clear();
   window.location.href = 'index.html';
 });
+
