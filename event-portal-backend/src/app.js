@@ -104,12 +104,21 @@ async function startServer() {
     console.log('SEED UGC THÀNH CÔNG!');
 
     // ==================== SEED SỰ KIỆN MẪU ====================
-       console.log('Đang xóa hết sự kiện cũ...');
+   console.log('Xóa các sự kiện mẫu cũ...');
+
 await Event.destroy({
-  truncate: true,
-  cascade: true,
-  restartIdentity: true
+  where: {
+    name: [
+      'ASTEES COLLECTION REVEAL',
+      'FABULOUS-ITMC MỞ ĐƠN TUYỂN THÀNH VIÊN',
+      'MARTIST – KHI THANH XUÂN CẤT TIẾNG',
+      'THE ASTRO - THE INFINITY GENERATION',
+      'HCM PTIT MULTIMEDIA 2025'
+    ]
+  }
 });
+
+
 
         console.log('Đang seed 5 sự kiện mẫu (3 chờ duyệt + 2 đã duyệt)...');
     try {
@@ -127,6 +136,7 @@ await Event.destroy({
           status: 'pending',
           channels: ['web'],
           organizationId: 18 // Thay bằng ID tổ chức thật (ví dụ A'zone)
+          
         },
         {
           name: 'FABULOUS-ITMC MỞ ĐƠN TUYỂN THÀNH VIÊN',
@@ -264,6 +274,7 @@ monthlyEvents.forEach(row => {
   }
 });
 startServer();
+
 
 
 
