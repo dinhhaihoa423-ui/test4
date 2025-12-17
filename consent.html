@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Quyền Riêng Tư & Tuân Thủ | Festival Sinh viên</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #1a56db;
+            --primary-dark: #1e429f;
+            --secondary: #7e22ce;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --info: #0ea5e9;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            background: white;
+            padding: 0 30px;
+            box-shadow: var(--box-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .logo-text p {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 5px;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--gray);
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .nav-tab:hover {
+            color: var(--dark);
+        }
+
+        .nav-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: rgba(26, 86, 219, 0.05);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .notification-badge {
+            position: relative;
+            cursor: pointer;
+            color: var(--gray);
+            font-size: 1.2rem;
+        }
+
+        .badge-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .user-profile:hover {
+            background: var(--light);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 25px;
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .stat-icon.primary {
+            background: linear-gradient(135deg, var(--primary), #3b82f6);
+        }
+
+        .stat-icon.success {
+            background: linear-gradient(135deg, var(--success), #10b981);
+        }
+
+        .stat-icon.warning {
+            background: linear-gradient(135deg, var(--warning), #f59e0b);
+        }
+
+        .stat-icon.danger {
+            background: linear-gradient(135deg, var(--danger), #ef4444);
+        }
+
+        .stat-info h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-info p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .stat-trend {
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .trend-up {
+            color: var(--success);
+        }
+
+        .trend-down {
+            color: var(--danger);
+        }
+
+        /* Dashboard Content */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 25px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid var(--gray-light);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background: var(--light);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark);
+            border-bottom: 2px solid var(--gray-light);
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .data-table tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: rgba(217, 119, 6, 0.1);
+            color: var(--warning);
+        }
+
+        .badge-danger {
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--danger);
+        }
+
+        .badge-info {
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--info);
+        }
+
+        .badge-primary {
+            background: rgba(26, 86, 219, 0.1);
+            color: var(--primary);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .btn-sm {
+            padding: 7px 15px;
+            font-size: 0.85rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--dark);
+            border: 2px solid var(--gray-light);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: rgba(26, 86, 219, 0.1);
+        }
+
+        /* Charts */
+        .chart-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            height: 100%;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        /* Activity Feed */
+        .activity-feed {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+
+        .activity-content h5 {
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+
+        .activity-content p {
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        /* Search and Filter */
+        .search-filter {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border: 2px solid var(--gray-light);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .filter-select {
+            padding: 12px 20px;
+            border: 2px solid var(--gray-light);
+            border-radius: 8px;
+            background: white;
+            font-size: 1rem;
+            color: var(--dark);
+            min-width: 150px;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            color: var(--dark);
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--gray-light);
+            transition: var(--transition);
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--success);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-top: 1px solid var(--gray-light);
+        }
+
+        .page-info {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .page-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .top-nav {
+                padding: 0 15px;
+                height: auto;
+                flex-direction: column;
+                padding: 15px;
+            }
+            
+            .nav-left, .nav-right {
+                width: 100%;
+                justify-content: space-between;
+                margin-bottom: 10px;
+            }
+            
+            .nav-tabs {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-filter {
+                flex-direction: column;
+            }
+            
+            .search-box, .filter-select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-left">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Admin Quyền Riêng Tư & Tuân Thủ</h1>
+                    <p>Cổng Sự Kiện Festival Sinh viên</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-tabs">
+            <div class="nav-tab active" data-tab="dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                Tổng quan
+            </div>
+            <div class="nav-tab" data-tab="consent">
+                <i class="fas fa-user-check"></i>
+                Đồng thuận
+            </div>
+            <div class="nav-tab" data-tab="logs">
+                <i class="fas fa-clipboard-list"></i>
+                Nhật ký
+            </div>
+            <div class="nav-tab" data-tab="requests">
+                <i class="fas fa-inbox"></i>
+                Yêu cầu
+                <span class="badge badge-danger" style="margin-left: 5px; font-size: 0.7rem;">18</span>
+            </div>
+            <div class="nav-tab" data-tab="reports">
+                <i class="fas fa-chart-bar"></i>
+                Báo cáo
+            </div>
+            <div class="nav-tab" data-tab="settings">
+                <i class="fas fa-cog"></i>
+                Cài đặt
+            </div>
+        </div>
+        
+        <div class="nav-right">
+            <div class="notification-badge">
+                <i class="fas fa-bell"></i>
+                <div class="badge-count">3</div>
+            </div>
+            
+            <div class="user-profile" id="user-menu">
+                <div class="user-avatar">AD</div>
+                <div>
+                    <div style="font-weight: 600;">Quản trị viên</div>
+                    <div style="font-size: 0.85rem; color: var(--gray);">admin@festival.edu.vn</div>
+                </div>
+                <i class="fas fa-chevron-down" style="font-size: 0.9rem;"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Dashboard Tab -->
+        <div id="dashboard-tab" class="tab-content active">
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <div class="stat-card">
+                    <div class="stat-icon primary">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="consent-rate">94.5%</h3>
+                        <p>Tỷ lệ đồng thuận</p>
+                        <div class="stat-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>2.3% so với tháng trước</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon success">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="active-users">1,248</h3>
+                        <p>Người dùng hoạt động</p>
+                        <div class="stat-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>5.7% tăng trưởng</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon warning">
+                        <i class="fas fa-file-export"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="data-requests">18</h3>
+                        <p>Yêu cầu dữ liệu</p>
+                        <div class="stat-trend trend-down">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>3 ít hơn tuần trước</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="security-alerts">3</h3>
+                        <p>Cảnh báo bảo mật</p>
+                        <div class="stat-trend trend-down">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>66% giảm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Left Column -->
+                <div>
+                    <!-- Consent Analytics -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-chart-line"></i>
+                                Phân tích Đồng thuận
+                            </h3>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn btn-outline btn-sm" id="export-chart">
+                                    <i class="fas fa-download"></i>
+                                    Xuất
+                                </button>
+                                <select class="filter-select" id="time-filter" style="width: auto;">
+                                    <option value="7days">7 ngày</option>
+                                    <option value="30days" selected>30 ngày</option>
+                                    <option value="90days">90 ngày</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="padding: 15px;">
+                            <canvas id="consentChart" height="250"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Recent Data Requests -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-inbox"></i>
+                                Yêu cầu Dữ liệu Gần đây
+                            </h3>
+                            <button class="btn btn-primary btn-sm" id="new-request-btn">
+                                <i class="fas fa-plus"></i>
+                                Xử lý thủ công
+                            </button>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Người dùng</th>
+                                        <th>Loại yêu cầu</th>
+                                        <th>Ngày yêu cầu</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="requests-table-body">
+                                    <!-- Data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="pagination">
+                            <div class="page-info">Hiển thị 1-5 của 18 yêu cầu</div>
+                            <div class="page-buttons">
+                                <button class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div>
+                    <!-- Activity Feed -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-history"></i>
+                                Hoạt động Gần đây
+                            </h3>
+                            <button class="btn btn-outline btn-sm" id="refresh-activity">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div class="activity-feed" id="activity-feed">
+                            <!-- Activities will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- System Status -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-server"></i>
+                                Trạng thái Hệ thống
+                            </h3>
+                            <span class="badge badge-success">Tất cả hoạt động</span>
+                        </div>
+                        <div style="padding: 15px 0;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 5px;">
+                                <div>
+                                    <div style="font-weight: 600; margin-bottom: 5px;">Nhật ký lưu trữ</div>
+                                    <div style="font-size: 0.85rem; color: var(--gray);">180 ngày theo chính sách</div>
+                                </div>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="log-storage" checked>
+                                    <span class="toggle-slider"></span>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 5px;">
+                                <div>
+                                    <div style="font-weight: 600; margin-bottom: 5px;">Mã hóa dữ liệu</div>
+                                    <div style="font-size: 0.85rem; color: var(--gray);">AES-256 đang hoạt động</div>
+                                </div>
+                                <i class="fas fa-check-circle" style="color: var(--success); font-size: 1.2rem;"></i>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 5px;">
+                                <div>
+                                    <div style="font-weight: 600; margin-bottom: 5px;">Tuân thủ GDPR/PDPA</div>
+                                    <div style="font-size: 0.85rem; color: var(--gray);">Đạt yêu cầu</div>
+                                </div>
+                                <i class="fas fa-check-circle" style="color: var(--success); font-size: 1.2rem;"></i>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 5px;">
+                                <div>
+                                    <div style="font-weight: 600; margin-bottom: 5px;">Lần quét cuối</div>
+                                    <div style="font-size: 0.85rem; color: var(--gray);">Hôm nay 08:30</div>
+                                </div>
+                                <button class="btn btn-outline btn-sm" id="run-scan">
+                                    <i class="fas fa-play"></i>
+                                    Chạy quét
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Consent Management Tab -->
+        <div id="consent-tab" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-user-check"></i>
+                        Quản lý Đồng thuận Người dùng
+                    </h3>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-primary" id="bulk-consent">
+                            <i class="fas fa-users"></i>
+                            Cập nhật hàng loạt
+                        </button>
+                        <button class="btn btn-outline" id="send-reminders">
+                            <i class="fas fa-envelope"></i>
+                            Gửi nhắc nhở
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="search-filter">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-users" placeholder="Tìm kiếm người dùng theo tên, email...">
+                    </div>
+                    <select class="filter-select" id="consent-filter">
+                        <option value="all">Tất cả đồng thuận</option>
+                        <option value="marketing">Chỉ Tiếp thị</option>
+                        <option value="analytics">Chỉ Phân tích</option>
+                        <option value="third-party">Chỉ Bên thứ ba</option>
+                        <option value="cookies">Chỉ Cookie</option>
+                    </select>
+                    <select class="filter-select" id="status-filter">
+                        <option value="all">Tất cả trạng thái</option>
+                        <option value="active">Đã đồng ý</option>
+                        <option value="inactive">Đã từ chối</option>
+                        <option value="pending">Chưa phản hồi</option>
+                    </select>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">
+                                    <input type="checkbox" id="select-all">
+                                </th>
+                                <th>Người dùng</th>
+                                <th>Tiếp thị</th>
+                                <th>Phân tích</th>
+                                <th>Bên thứ ba</th>
+                                <th>Cookie</th>
+                                <th>Cập nhật lần cuối</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="consent-table-body">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination">
+                    <div class="page-info">Hiển thị 1-10 của 1,248 người dùng</div>
+                    <div class="page-buttons">
+                        <button class="btn btn-secondary btn-sm">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="btn btn-secondary btn-sm" style="background: var(--primary); color: white;">1</button>
+                        <button class="btn btn-secondary btn-sm">2</button>
+                        <button class="btn btn-secondary btn-sm">3</button>
+                        <button class="btn btn-secondary btn-sm">...</button>
+                        <button class="btn btn-secondary btn-sm">25</button>
+                        <button class="btn btn-secondary btn-sm">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Access Logs Tab -->
+        <div id="logs-tab" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-clipboard-list"></i>
+                        Nhật ký Truy cập & Hoạt động
+                    </h3>
+                    <button class="btn btn-outline" id="export-logs">
+                        <i class="fas fa-file-export"></i>
+                        Xuất nhật ký
+                    </button>
+                </div>
+                
+                <div class="search-filter">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-logs" placeholder="Tìm kiếm theo người dùng, hành động, IP...">
+                    </div>
+                    <input type="date" class="filter-select" id="log-start-date">
+                    <input type="date" class="filter-select" id="log-end-date">
+                    <select class="filter-select" id="log-type-filter">
+                        <option value="all">Tất cả loại</option>
+                        <option value="security">Bảo mật</option>
+                        <option value="data-access">Truy cập dữ liệu</option>
+                        <option value="consent-change">Thay đổi đồng thuận</option>
+                        <option value="system">Hệ thống</option>
+                    </select>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Thời gian</th>
+                                <th>Người dùng</th>
+                                <th>Hành động</th>
+                                <th>Tài nguyên</th>
+                                <th>Địa chỉ IP</th>
+                                <th>Trạng thái</th>
+                                <th>Chi tiết</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logs-table-body">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination">
+                    <div class="page-info">Hiển thị 1-10 của 2,415 nhật ký</div>
+                    <div class="page-buttons">
+                        <button class="btn btn-secondary btn-sm">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="btn btn-secondary btn-sm">100 mục/trang</button>
+                        <button class="btn btn-secondary btn-sm">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="user-detail-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Chi tiết Người dùng</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="user-detail-content">
+                    <!-- User details will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="export-report-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Xuất Báo cáo Tuân thủ</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; margin-bottom: 10px; font-weight: 600;">Chọn loại báo cáo:</label>
+                    <div style="display: grid; grid-template-columns: 1fr 
