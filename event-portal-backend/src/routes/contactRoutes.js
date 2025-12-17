@@ -1,9 +1,10 @@
-// routes/contactRoutes.js
+// src/routes/contactRoutes.js
 const express = require('express');
 const router = express.Router();
-const { Contact } = require('../models'); // sequelize models
+const sequelize = require('../config/database');
+const Contact = require('../models/Contact');
 
-// GET: Lấy thông tin liên lạc (chỉ có 1 bản ghi)
+// GET: Lấy thông tin liên lạc (chỉ 1 bản ghi duy nhất)
 router.get('/', async (req, res) => {
   try {
     let contact = await Contact.findOne();
@@ -17,7 +18,8 @@ router.get('/', async (req, res) => {
     }
     res.json(contact);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ error: 'Lỗi server' });
   }
 });
 
@@ -25,15 +27,22 @@ router.get('/', async (req, res) => {
 router.put('/', async (req, res) => {
   try {
     const { email, phone, address } = req.body;
+
+    if (!email || !phone || !address) {
+      return res.status(400).json({ error: 'Thiếu dữ liệu' });
+    }
+
     let contact = await Contact.findOne();
     if (!contact) {
       contact = await Contact.create({ email, phone, address });
     } else {
       await contact.update({ email, phone, address });
     }
+
     res.json(contact);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ error: 'Lỗi server' });
   }
 });
 
